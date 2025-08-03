@@ -1,5 +1,5 @@
 {
-  "name": "orbit",
+  "name": "orbit-it",
   "private": true,
   "scripts": {
     "build": "turbo run build",
