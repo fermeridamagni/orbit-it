@@ -14,9 +14,7 @@
       "!**/.cache/**",
 
       // Include all TypeScript and TSX files in the src directory and its subdirectories.
-      "./**/*.{json,jsonc,md,mdx}",
-      "./src/**/*.ts",
-      "./src/**/*.tsx"
+      "./**/*.{json,jsonc,md,mdx,ts,tsx,js,jsx}"
     ]
   }
 }
