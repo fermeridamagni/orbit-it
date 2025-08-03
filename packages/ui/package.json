@@ -1,0 +1,15 @@
+{
+  "name": "@orbit-it/ui",
+  "version": "1.0.0",
+  "description": "",
+  "keywords": [],
+  "author": {
+    "name": "fermeridamagni <Magni Development>",
+    "email": "hello@magni.dev",
+    "url": "https://magni.dev"
+  },
+  "scripts": {},
+  "dependencies": {},
+  "devDependencies": {},
+  "packageManager": "pnpm@10.14.0"
+}
