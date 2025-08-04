@@ -8,8 +8,57 @@
     "email": "hello@magni.dev",
     "url": "https://magni.dev"
   },
-  "scripts": {},
-  "dependencies": {},
-  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fermeridamagni/orbit-it.git",
+    "directory": "packages/core"
+  },
+  "bugs": {
+    "url": "https://github.com/fermeridamagni/orbit-it/issues",
+    "email": "help@magni.dev"
+  },
+  "homepage": "",
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "exports": {
+    ".": {
+      "import": {
+        "default": "./dist/index.mjs",
+        "types": "./dist/index.d.mts"
+      },
+      "require": {
+        "default": "./dist/index.cjs",
+        "types": "./dist/index.d.cts"
+      }
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "unbuild",
+    "build:stub": "unbuild --stub",
+    "test": "vitest --run",
+    "test:watch": "vitest --watch",
+    "test:ui": "vitest --ui"
+  },
+  "peerDependencies": {
+    "@t3-oss/env-core": "^0.13.8",
+    "zod": "^4.0.14"
+  },
+  "dependencies": {
+    "@octokit/rest": "^22.0.0",
+    "picocolors": "^1.1.1",
+    "simple-git": "^3.28.0"
+  },
+  "devDependencies": {
+    "@magnidev/typescript-config": "^0.2.1",
+    "@types/node": "^24.1.0",
+    "typescript": "5.9.2",
+    "unbuild": "^3.6.0",
+    "vitest": "^3.2.4"
+  },
   "packageManager": "pnpm@10.14.0"
 }
