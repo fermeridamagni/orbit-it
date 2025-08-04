@@ -1,4 +1,5 @@
-import { dirname, fileURLToPath, resolve } from 'node:url';
+import { dirname } from 'node:path';
+import { fileURLToPath, resolve } from 'node:url';
 import { defineBuildConfig } from 'unbuild';
 
 const __filename = fileURLToPath(import.meta.url);
