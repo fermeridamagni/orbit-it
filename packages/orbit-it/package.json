@@ -1,0 +1,45 @@
+{
+  "name": "orbit-it",
+  "version": "1.0.0-beta.1",
+  "description": "",
+  "keywords": [],
+  "author": {
+    "name": "fermeridamagni <Magni Development>",
+    "email": "hello@magni.dev",
+    "url": "https://magni.dev"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fermeridamagni/orbit-it.git",
+    "directory": "packages/cli"
+  },
+  "bugs": {
+    "url": "https://github.com/fermeridamagni/orbit-it/issues",
+    "email": "help@magni.dev"
+  },
+  "homepage": "",
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "bin": {
+    "orbit-it": "./dist/index.cjs"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "unbuild",
+    "build:stub": "unbuild --stub",
+    "start": "node ./dist/index.cjs",
+    "test": "vitest --run",
+    "test:watch": "vitest --watch",
+    "test:ui": "vitest --ui"
+  },
+  "dependencies": {
+    "commander": "^14.0.0",
+    "unbuild": "^3.6.0",
+    "vitest": "^3.2.4"
+  },
+  "packageManager": "pnpm@10.14.0"
+}
