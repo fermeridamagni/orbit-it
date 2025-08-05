@@ -7,7 +7,7 @@
 import colors from 'picocolors';
 import type { Formatter } from 'picocolors/types';
 import simpleGit, { type SimpleGit } from 'simple-git';
-import type { FunctionResult } from '@/types/functions';
+import type { FunctionResult } from '../types/functions';
 import type {
   CommitChangesOptions,
   CommitChangesResult,
@@ -20,7 +20,7 @@ import type {
   GetStatusResult,
   HasChangesResult,
   IsRepoResult,
-} from '@/types/git-client';
+} from '../types/git-client';
 
 const remoteUrlRegex = /github\.com[:/](.+)\/(.+)(\.git)?$/; // Adjusted regex to match both HTTPS and SSH formats -> https://github.com/owner/repo.git
 const removeGitFromUrlRegex = /\.git$/; // Regex to remove .git from the end of the URL
@@ -525,13 +525,13 @@ class GitClient {
   }
   // #endregion - @pushTags
 
-  // #region - @getChangeInfo
+  // #region - @getChangeType
   /**
    * @description Returns the console color and label for a given change type.
    * @param type - The type of change (e.g., "a" for added, "m" for modified).
    * @returns {consoleColor: Formatter; label: string;} An object containing the console color and label for the change type.
    */
-  getChangeInfo = (
+  getChangeType = (
     type: string
   ): {
     consoleColor: Formatter;
@@ -568,7 +568,7 @@ class GitClient {
 
     return { consoleColor, label };
   };
-  // #endregion - @getChangeInfo
+  // #endregion - @getChangeType
 
   // #region - @constructCommitMessage
   /**

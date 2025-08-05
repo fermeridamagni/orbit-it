@@ -4,21 +4,19 @@
  * @description Class to manage GitHub operations and repository information
  */
 
-import { env } from '@lib/env-config';
-import GitClient from '@lib/git-client';
 import { Octokit } from '@octokit/rest';
-import type { FunctionResult } from '@/types/functions';
-import type { Commit, CommitType } from '@/types/git-client';
+import type { FunctionResult } from '../types/functions';
+import type { Commit, CommitType } from '../types/git-client';
 import type {
   CheckRepoExistsResult,
-  ClientOptions,
   CreateReleaseResult,
   GetRepoInfoResult,
   GetUserInfoResult,
   GitHubClientOptions,
   GroupCommitsByType,
   ListReleasesResult,
-} from '@/types/github-client';
+} from '../types/github-client';
+import GitClient from './git-client';
 
 const commitMessageRegex =
   /^(feat|fix|docs|style|refactor|perf|test|chore)(\([^)]*\))?:/;
@@ -28,7 +26,7 @@ class GitHubClient {
   gitClient: GitClient;
 
   constructor({ gitClient }: GitHubClientOptions) {
-    this.init({ token: env.GITHUB_TOKEN });
+    this.init();
     this.gitClient = gitClient || new GitClient();
   }
 
@@ -37,7 +35,9 @@ class GitHubClient {
    * @description Initializes the GitHub client with a personal access token.
    * @param token - The personal access token for GitHub API authentication.
    */
-  private init({ token }: ClientOptions): void {
+  private init(): void {
+    const token = process.env.GITHUB_TOKEN;
+
     this.client = new Octokit({ auth: token });
   }
   // #endregion - @init
