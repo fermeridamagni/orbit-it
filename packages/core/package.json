@@ -44,18 +44,14 @@
     "test:watch": "vitest --watch",
     "test:ui": "vitest --ui"
   },
-  "peerDependencies": {
-    "@t3-oss/env-core": "^0.13.8",
-    "zod": "^4.0.14"
-  },
   "dependencies": {
     "@octokit/rest": "^22.0.0",
+    "zod": "^4.0.14",
+    "fast-glob": "^3.3.3",
     "picocolors": "^1.1.1",
     "simple-git": "^3.28.0"
   },
   "devDependencies": {
-    "@magnidev/typescript-config": "^0.2.1",
-    "@types/node": "^24.1.0",
     "typescript": "5.9.2",
     "unbuild": "^3.6.0",
     "vitest": "^3.2.4"
