@@ -7,7 +7,7 @@
 import colors from 'picocolors';
 import type { Formatter } from 'picocolors/types';
 import simpleGit, { type SimpleGit } from 'simple-git';
-import type { FunctionResult } from '../types/functions';
+import type { FunctionResult } from '@/types/functions';
 import type {
   CommitChangesOptions,
   CommitChangesResult,
@@ -20,7 +20,7 @@ import type {
   GetStatusResult,
   HasChangesResult,
   IsRepoResult,
-} from '../types/git-client';
+} from '@/types/git-client';
 
 const remoteUrlRegex = /github\.com[:/](.+)\/(.+)(\.git)?$/; // Adjusted regex to match both HTTPS and SSH formats -> https://github.com/owner/repo.git
 const removeGitFromUrlRegex = /\.git$/; // Regex to remove .git from the end of the URL

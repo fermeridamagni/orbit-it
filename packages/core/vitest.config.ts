@@ -1,3 +1,4 @@
+import { resolve } from 'node:path';
 import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
@@ -6,5 +7,10 @@ export default defineConfig({
     environment: 'node',
     include: ['src/tests/**/*.{test}.ts'],
     exclude: ['node_modules', 'dist', '.turbo'],
+    alias: {
+      '@': resolve(__dirname, './src'),
+      '@lib': resolve(__dirname, './src/lib'),
+      '@schemas': resolve(__dirname, './src/schemas'),
+    },
   },
 });

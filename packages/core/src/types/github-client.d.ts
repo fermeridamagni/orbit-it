@@ -1,5 +1,5 @@
+import type GitClient from '@lib/git-client';
 import type { RestEndpointMethodTypes } from '@octokit/rest';
-import type GitClient from '../lib/git-client';
 import type { Commit, CommitType } from './git-client';
 
 /**

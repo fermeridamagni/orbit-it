@@ -4,9 +4,10 @@
  * @description Class to manage GitHub operations and repository information
  */
 
+import GitClient from '@lib/git-client';
 import { Octokit } from '@octokit/rest';
-import type { FunctionResult } from '../types/functions';
-import type { Commit, CommitType } from '../types/git-client';
+import type { FunctionResult } from '@/types/functions';
+import type { Commit, CommitType } from '@/types/git-client';
 import type {
   CheckRepoExistsResult,
   CreateReleaseResult,
@@ -15,8 +16,7 @@ import type {
   GitHubClientOptions,
   GroupCommitsByType,
   ListReleasesResult,
-} from '../types/github-client';
-import GitClient from './git-client';
+} from '@/types/github-client';
 
 const commitMessageRegex =
   /^(feat|fix|docs|style|refactor|perf|test|chore)(\([^)]*\))?:/;

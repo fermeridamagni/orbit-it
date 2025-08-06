@@ -1,3 +1,4 @@
+import { resolve } from 'node:path';
 import { defineBuildConfig } from 'unbuild';
 
 export default defineBuildConfig({
@@ -5,6 +6,7 @@ export default defineBuildConfig({
     {
       input: 'src/index.ts',
       format: 'esm',
+      ext: 'mjs',
     },
     {
       input: 'src/index.ts',
@@ -16,8 +18,10 @@ export default defineBuildConfig({
   declaration: true,
   rollup: {
     emitCJS: true,
-    esbuild: {
-      exclude: ['zod', '@octokit/rest', 'simple-git', 'picocolors'],
-    },
+  },
+  alias: {
+    '@': resolve(__dirname, './src'),
+    '@lib': resolve(__dirname, './src/lib'),
+    '@schemas': resolve(__dirname, './src/schemas'),
   },
 });

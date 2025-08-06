@@ -1,4 +1,4 @@
-import type { Adapter, AdapterConfig } from '../../types/adapters';
+import type { Adapter, AdapterConfig } from '@/types/adapters';
 
 function createAdapter(config: AdapterConfig): Adapter {
   return {
