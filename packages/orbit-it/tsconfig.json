@@ -8,6 +8,7 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"],
+      "@schemas/*": ["src/schemas/*"],
       "@utils/*": ["src/utils/*"]
     }
   }

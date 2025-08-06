@@ -9,6 +9,7 @@ export default defineConfig({
     exclude: ['node_modules', 'dist', '.turbo'],
     alias: {
       '@': resolve(__dirname, './src'),
+      '@schemas': resolve(__dirname, './src/schemas'),
       '@utils': resolve(__dirname, './src/utils'),
     },
   },

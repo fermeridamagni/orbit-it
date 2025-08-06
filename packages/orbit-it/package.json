@@ -23,7 +23,13 @@
     "registry": "https://registry.npmjs.org/"
   },
   "bin": {
-    "orbit-it": "./dist/index.cjs"
+    "orbit-it": "./dist/cli.cjs"
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/cli.mjs",
+      "require": "./dist/cli.cjs"
+    }
   },
   "files": [
     "dist"
@@ -31,7 +37,7 @@
   "scripts": {
     "build": "unbuild",
     "dev": "unbuild --stub",
-    "start": "node ./dist/index.cjs",
+    "start": "node ./dist/cli.cjs",
     "test": "vitest --run",
     "test:watch": "vitest --watch",
     "test:ui": "vitest --ui"
@@ -39,7 +45,9 @@
   "dependencies": {
     "@clack/prompts": "^0.11.0",
     "commander": "^14.0.0",
-    "picocolors": "^1.1.1"
+    "fast-glob": "^3.3.3",
+    "picocolors": "^1.1.1",
+    "zod": "^4.0.14"
   },
   "devDependencies": {
     "unbuild": "^3.6.0",

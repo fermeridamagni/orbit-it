@@ -2,9 +2,17 @@ import { resolve } from 'node:path';
 import { defineBuildConfig } from 'unbuild';
 
 export default defineBuildConfig({
-  entries: ['src/index.ts'],
+  entries: [
+    {
+      input: 'src/index.ts',
+      outDir: 'build',
+      format: 'cjs',
+      ext: 'cjs',
+      name: 'cli',
+    },
+  ],
   clean: true,
-  declaration: true,
+  declaration: false,
   rollup: {
     emitCJS: true,
     output: {
@@ -13,6 +21,7 @@ export default defineBuildConfig({
   },
   alias: {
     '@': resolve(__dirname, './src'),
+    '@schemas': resolve(__dirname, './src/schemas'),
     '@utils': resolve(__dirname, './src/utils'),
   },
 });
