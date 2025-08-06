@@ -39,7 +39,7 @@
   ],
   "scripts": {
     "build": "unbuild",
-    "build:stub": "unbuild --stub",
+    "dev": "unbuild --stub",
     "test": "vitest --run",
     "test:watch": "vitest --watch",
     "test:ui": "vitest --ui"

@@ -30,7 +30,7 @@
   ],
   "scripts": {
     "build": "unbuild",
-    "build:stub": "unbuild --stub",
+    "dev": "unbuild --stub",
     "start": "node ./dist/index.cjs",
     "test": "vitest --run",
     "test:watch": "vitest --watch",
