@@ -73,9 +73,7 @@ function initCommand(program: Command): Command {
         }
       );
 
-      if (dryRun) {
-        note(JSON.stringify(userConfig, null, 2), 'Configuration Preview');
-      }
+      note(JSON.stringify(userConfig, null, 2), 'Configuration Preview');
     });
 }
 

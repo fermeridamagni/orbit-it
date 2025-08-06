@@ -8,8 +8,12 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"],
+      "@lib/*": ["src/lib/*"],
       "@schemas/*": ["src/schemas/*"],
+      "@commands/*": ["src/commands/*"],
       "@utils/*": ["src/utils/*"]
     }
-  }
+  },
+  "exclude": ["node_modules", "build", ".turbo"],
+  "include": ["src"]
 }

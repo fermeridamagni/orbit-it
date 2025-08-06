@@ -17,7 +17,7 @@
     "url": "https://github.com/fermeridamagni/orbit-it/issues",
     "email": "help@magni.dev"
   },
-  "homepage": "",
+  "homepage": "https://github.com/fermeridamagni/orbit-it",
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org/"
@@ -29,10 +29,23 @@
     ".": {
       "import": "./build/cli.mjs",
       "require": "./build/cli.cjs"
+    },
+    "./config": {
+      "import": {
+        "types": "./build/config.d.mts",
+        "default": "./build/config.mjs"
+      },
+      "require": {
+        "types": "./build/config.d.cts",
+        "default": "./build/config.cjs"
+      }
     }
   },
   "files": [
-    "build"
+    "build",
+    "package.json",
+    "README.md",
+    "LICENSE"
   ],
   "scripts": {
     "build": "unbuild",
