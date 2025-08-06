@@ -23,21 +23,21 @@
     "registry": "https://registry.npmjs.org/"
   },
   "bin": {
-    "orbit-it": "./dist/cli.cjs"
+    "orbit-it": "./build/cli.cjs"
   },
   "exports": {
     ".": {
-      "import": "./dist/cli.mjs",
-      "require": "./dist/cli.cjs"
+      "import": "./build/cli.mjs",
+      "require": "./build/cli.cjs"
     }
   },
   "files": [
-    "dist"
+    "build"
   ],
   "scripts": {
     "build": "unbuild",
     "dev": "unbuild --stub",
-    "start": "node ./dist/cli.cjs",
+    "start": "node ./build/cli.cjs",
     "test": "vitest --run",
     "test:watch": "vitest --watch",
     "test:ui": "vitest --ui"

@@ -25,17 +25,17 @@
   "exports": {
     ".": {
       "import": {
-        "default": "./dist/index.mjs",
-        "types": "./dist/index.d.mts"
+        "default": "./build/index.mjs",
+        "types": "./build/index.d.mts"
       },
       "require": {
-        "default": "./dist/index.cjs",
-        "types": "./dist/index.d.cts"
+        "default": "./build/index.cjs",
+        "types": "./build/index.d.cts"
       }
     }
   },
   "files": [
-    "dist"
+    "build"
   ],
   "scripts": {
     "build": "unbuild",
