@@ -1,3 +1,5 @@
+import { blue } from 'picocolors';
+
 export const banner = `
  ██████╗ ██████╗ ██████╗ ██╗████████╗    ██╗████████╗
 ██╔═══██╗██╔══██╗██╔══██╗██║╚══██╔══╝    ██║╚══██╔══╝
@@ -6,11 +8,13 @@ export const banner = `
 ╚██████╔╝██║  ██║██████╔╝██║   ██║       ██║   ██║   
  ╚═════╝ ╚═╝  ╚═╝╚═════╝ ╚═╝   ╚═╝       ╚═╝   ╚═╝   `;
 
-export const description =
+export const descriptionMessage =
   '🚀 Orbit It - Manage Your Repositories and Monorepos on GitHub';
 
-export const intro = '🚀 Orbit It. Keep your projects in sync.';
+export const introMessage = '🚀 Orbit It. Keep your projects in sync.';
 
-export const outro = '🚀 Orbit It. Happy coding!';
+export const outroMessage = '🚀 Orbit It. Happy coding!';
 
-export const errorOutro = '🚀 Orbit It. Something went wrong.';
+export const dryRunMessage = `Dry run mode ${blue('enabled')}.`;
+
+export const errorOutroMessage = '🚀 Orbit It. Something went wrong.';
