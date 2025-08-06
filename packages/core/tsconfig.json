@@ -8,5 +8,7 @@
       "@utils/*": ["src/utils/*"],
       "@schemas/*": ["src/schemas/*"]
     }
-  }
+  },
+  "exclude": ["node_modules", "build", ".turbo"],
+  "include": ["src"]
 }
