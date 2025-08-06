@@ -1,6 +1,6 @@
 {
   "name": "orbit-it",
-  "description": "Orbit It - A comprehensive toolkit for managing and interacting with Git and GitHub, including version control, issue tracking, and repository management.",
+  "description": "A comprehensive toolkit for managing and interacting with Git and GitHub, including version control, issue tracking, and repository management.",
   "private": true,
   "scripts": {
     "build": "turbo run build",
