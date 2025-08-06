@@ -14,6 +14,7 @@ export default defineBuildConfig({
       ext: 'cjs',
     },
   ],
+  outDir: 'build',
   clean: true,
   declaration: true,
   rollup: {

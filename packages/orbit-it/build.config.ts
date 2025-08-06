@@ -5,12 +5,12 @@ export default defineBuildConfig({
   entries: [
     {
       input: 'src/index.ts',
-      outDir: 'build',
       format: 'cjs',
       ext: 'cjs',
       name: 'cli',
     },
   ],
+  outDir: 'build',
   clean: true,
   declaration: false,
   rollup: {
