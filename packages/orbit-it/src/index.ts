@@ -1,6 +1,7 @@
+import { banner, description } from '@utils/banner';
 import { Command } from 'commander';
+// @ts-expect-error Error: TypeScript does not recognize the import of JSON files by default.
 import packagejson from '../package.json' with { type: 'json' };
-import { banner, description } from './utils/banner';
 
 // Display the intro message
 const program = new Command();

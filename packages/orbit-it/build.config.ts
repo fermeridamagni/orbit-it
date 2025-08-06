@@ -1,6 +1,5 @@
+import { resolve } from 'node:path';
 import { defineBuildConfig } from 'unbuild';
-
-const banner = '#!/usr/bin/env node';
 
 export default defineBuildConfig({
   entries: ['src/index.ts'],
@@ -8,24 +7,12 @@ export default defineBuildConfig({
   declaration: true,
   rollup: {
     emitCJS: true,
-    esbuild: {
-      exclude: [],
+    output: {
+      banner: '#!/usr/bin/env node',
     },
   },
-  hooks: {
-    'rollup:options': (_ctx, options) => {
-      if (options.output) {
-        // Add shebang to the CLI output file
-        options.output = Array.isArray(options.output)
-          ? options.output.map((output) => ({
-              ...output,
-              banner,
-            }))
-          : {
-              ...options.output,
-              banner,
-            };
-      }
-    },
+  alias: {
+    '@': resolve(__dirname, './src'),
+    '@utils': resolve(__dirname, './src/utils'),
   },
 });
