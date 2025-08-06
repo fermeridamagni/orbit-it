@@ -43,6 +43,7 @@
     "test:ui": "vitest --ui"
   },
   "dependencies": {
+    "@orbit-it/core": "workspace:*",
     "@clack/prompts": "^0.11.0",
     "commander": "^14.0.0",
     "fast-glob": "^3.3.3",
