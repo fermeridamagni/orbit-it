@@ -90,3 +90,13 @@ export type CreateTagOptions = {
   tagName: string;
   tagMessage?: string;
 };
+
+/**
+ * @description The options for constructing a commit message.
+ */
+export type ConstructCommitMessageOptions = {
+  type: string;
+  message: string;
+  body?: string;
+  scope?: string;
+};

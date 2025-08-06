@@ -4,8 +4,9 @@
  * @description Class to manage GitHub operations and repository information
  */
 
-import GitClient from '@lib/git-client';
+import { GitClient } from '@lib/git-client';
 import { Octokit } from '@octokit/rest';
+import { OrbitItError } from '@utils/errors';
 import type { FunctionResult } from '@/types/functions';
 import type { Commit, CommitType } from '@/types/git-client';
 import type {
@@ -21,7 +22,7 @@ import type {
 const commitMessageRegex =
   /^(feat|fix|docs|style|refactor|perf|test|chore)(\([^)]*\))?:/;
 
-class GitHubClient {
+export class GitHubClient {
   client: Octokit | null = null;
   gitClient: GitClient;
 
@@ -48,33 +49,38 @@ class GitHubClient {
    * @returns A promise that resolves to the user's information.
    */
   async getUserInfo(): Promise<FunctionResult<GetUserInfoResult>> {
-    let success = false;
-    let message = '';
-    let result: GetUserInfoResult = null;
+    let error: OrbitItError | undefined;
+    let data: GetUserInfoResult | undefined;
 
     try {
       if (!this.client) {
-        throw new Error('GitHub client is not initialized');
+        throw new OrbitItError({
+          message: 'GitHub client is not initialized',
+          content: [
+            {
+              message: 'Please ensure a valid GITHUB_TOKEN is provided.',
+            },
+          ],
+        });
       }
 
       const response = await this.client.users.getAuthenticated();
 
-      success = true;
-      message = 'User information retrieved successfully';
-      result = response.data;
-    } catch (error) {
-      success = false;
-      message = 'Failed to retrieve user information';
-
-      if (error instanceof Error) {
-        message = error.message;
+      data = response.data;
+    } catch (foundError) {
+      if (foundError instanceof OrbitItError) {
+        error = foundError;
+      } else if (foundError instanceof Error) {
+        error = new OrbitItError({
+          message: foundError.message,
+          content: [{ message: 'Failed to retrieve user information.' }],
+        });
       }
     }
 
     return {
-      success,
-      message,
-      data: result,
+      error,
+      data,
     };
   }
   // #endregion - @getUserInfo
@@ -90,33 +96,38 @@ class GitHubClient {
     owner: string,
     repo: string
   ): Promise<FunctionResult<GetRepoInfoResult>> {
-    let success = false;
-    let message = '';
-    let result: GetRepoInfoResult = null;
+    let error: OrbitItError | undefined;
+    let data: GetRepoInfoResult | undefined;
 
     try {
       if (!this.client) {
-        throw new Error('GitHub client is not initialized');
+        throw new OrbitItError({
+          message: 'GitHub client is not initialized',
+          content: [
+            {
+              message: 'Please ensure a valid GITHUB_TOKEN is provided.',
+            },
+          ],
+        });
       }
 
       const response = await this.client.repos.get({ owner, repo });
 
-      success = true;
-      message = 'Repository information retrieved successfully';
-      result = response.data;
-    } catch (error) {
-      success = false;
-      message = 'Failed to retrieve repository information';
-
-      if (error instanceof Error) {
-        message = error.message;
+      data = response.data;
+    } catch (foundError) {
+      if (foundError instanceof OrbitItError) {
+        error = foundError;
+      } else if (foundError instanceof Error) {
+        error = new OrbitItError({
+          message: foundError.message,
+          content: [{ message: 'Failed to retrieve repository information.' }],
+        });
       }
     }
 
     return {
-      success,
-      message,
-      data: result,
+      error,
+      data,
     };
   }
   // #endregion - @getRepoInfo
@@ -139,13 +150,19 @@ class GitHubClient {
     body: string,
     prerelease = false
   ): Promise<FunctionResult<CreateReleaseResult>> {
-    let success = false;
-    let message = '';
-    let result: CreateReleaseResult = null;
+    let error: OrbitItError | undefined;
+    let data: CreateReleaseResult | undefined;
 
     try {
       if (!this.client) {
-        throw new Error('GitHub client is not initialized');
+        throw new OrbitItError({
+          message: 'GitHub client is not initialized',
+          content: [
+            {
+              message: 'Please ensure a valid GITHUB_TOKEN is provided.',
+            },
+          ],
+        });
       }
 
       const response = await this.client.repos.createRelease({
@@ -157,22 +174,21 @@ class GitHubClient {
         prerelease,
       });
 
-      success = true;
-      message = 'Release created successfully';
-      result = response.data;
-    } catch (error) {
-      success = false;
-      message = 'Failed to create release';
-
-      if (error instanceof Error) {
-        message = error.message;
+      data = response.data;
+    } catch (foundError) {
+      if (foundError instanceof OrbitItError) {
+        error = foundError;
+      } else if (foundError instanceof Error) {
+        error = new OrbitItError({
+          message: foundError.message,
+          content: [{ message: 'Failed to create release.' }],
+        });
       }
     }
 
     return {
-      success,
-      message,
-      data: result,
+      error,
+      data,
     };
   }
   // #endregion - @createRelease
@@ -188,13 +204,19 @@ class GitHubClient {
     owner: string,
     repo: string
   ): Promise<FunctionResult<ListReleasesResult>> {
-    let success = false;
-    let message = '';
-    let result: ListReleasesResult = null;
+    let error: OrbitItError | undefined;
+    let data: ListReleasesResult | undefined;
 
     try {
       if (!this.client) {
-        throw new Error('GitHub client is not initialized');
+        throw new OrbitItError({
+          message: 'GitHub client is not initialized',
+          content: [
+            {
+              message: 'Please ensure a valid GITHUB_TOKEN is provided.',
+            },
+          ],
+        });
       }
 
       const response = await this.client.repos.listReleases({
@@ -202,22 +224,21 @@ class GitHubClient {
         repo,
       });
 
-      success = true;
-      message = 'Releases listed successfully';
-      result = response.data;
-    } catch (error) {
-      success = false;
-      message = 'Failed to list releases';
-
-      if (error instanceof Error) {
-        message = error.message;
+      data = response.data;
+    } catch (foundError) {
+      if (foundError instanceof OrbitItError) {
+        error = foundError;
+      } else if (foundError instanceof Error) {
+        error = new OrbitItError({
+          message: foundError.message,
+          content: [{ message: 'Failed to list releases.' }],
+        });
       }
     }
 
     return {
-      success,
-      message,
-      data: result,
+      error,
+      data,
     };
   }
   // #endregion - @listReleases
@@ -235,12 +256,18 @@ class GitHubClient {
     repo: string,
     releaseId: number
   ): Promise<FunctionResult> {
-    let success = false;
-    let message = '';
+    let error: OrbitItError | undefined;
 
     try {
       if (!this.client) {
-        throw new Error('GitHub client is not initialized');
+        throw new OrbitItError({
+          message: 'GitHub client is not initialized',
+          content: [
+            {
+              message: 'Please ensure a valid GITHUB_TOKEN is provided.',
+            },
+          ],
+        });
       }
 
       await this.client.repos.deleteRelease({
@@ -248,21 +275,19 @@ class GitHubClient {
         repo,
         release_id: releaseId,
       });
-
-      success = true;
-      message = 'Release deleted successfully';
-    } catch (error) {
-      success = false;
-      message = 'Failed to delete release';
-
-      if (error instanceof Error) {
-        message = error.message;
+    } catch (foundError) {
+      if (foundError instanceof OrbitItError) {
+        error = foundError;
+      } else if (foundError instanceof Error) {
+        error = new OrbitItError({
+          message: foundError.message,
+          content: [{ message: 'Failed to delete release.' }],
+        });
       }
     }
 
     return {
-      success,
-      message,
+      error,
     };
   }
   // #endregion - @deleteRelease
@@ -278,33 +303,44 @@ class GitHubClient {
     owner: string,
     repo: string
   ): Promise<FunctionResult<CheckRepoExistsResult>> {
-    let success = false;
-    let message = '';
-    let result: CheckRepoExistsResult = false;
+    let error: OrbitItError | undefined;
+    let data: CheckRepoExistsResult | undefined;
 
     try {
       if (!this.client) {
-        throw new Error('GitHub client is not initialized');
+        throw new OrbitItError({
+          message: 'GitHub client is not initialized',
+          content: [
+            {
+              message: 'Please ensure a valid GITHUB_TOKEN is provided.',
+            },
+          ],
+        });
       }
 
       await this.client.repos.get({ owner, repo });
 
-      success = true;
-      message = 'Repository exists';
-      result = true;
-    } catch (error) {
-      success = false;
-      message = 'Repository does not exist';
-
-      if (error instanceof Error) {
-        message = error.message;
+      data = true;
+    } catch (foundError) {
+      if (foundError instanceof OrbitItError) {
+        error = foundError;
+      } else if (foundError instanceof Error) {
+        // For this function, we don't treat "not found" as an error
+        // Instead, we return false to indicate the repo doesn't exist
+        if (foundError.message.includes('Not Found')) {
+          data = false;
+        } else {
+          error = new OrbitItError({
+            message: foundError.message,
+            content: [{ message: 'Failed to check if repository exists.' }],
+          });
+        }
       }
     }
 
     return {
-      success,
-      message,
-      data: result,
+      error,
+      data,
     };
   }
   // #endregion - @checkRepoExists
@@ -315,15 +351,19 @@ class GitHubClient {
    * @returns Commits grouped by type.
    */
   async groupCommitsByType(): Promise<FunctionResult<GroupCommitsByType>> {
-    let success = false;
-    let message = '';
-    let result: GroupCommitsByType = null;
+    let error: OrbitItError | undefined;
+    let data: GroupCommitsByType | undefined;
 
     try {
       const commits = await this.gitClient.getCommits();
 
-      if (!commits?.data) {
-        throw new Error(commits?.message);
+      if (commits.error || !commits.data) {
+        throw new OrbitItError({
+          message: commits.error?.message || 'Failed to get commits',
+          content: commits.error?.content || [
+            { message: 'Unable to retrieve commits.' },
+          ],
+        });
       }
 
       const grouped: Record<CommitType, Commit[]> = {
@@ -354,22 +394,21 @@ class GitHubClient {
         grouped[type].push(commit);
       }
 
-      result = grouped;
-      success = true;
-      message = 'Commits grouped by type successfully';
-    } catch (error) {
-      success = false;
-      message = 'Failed to group commits by type';
-
-      if (error instanceof Error) {
-        message = error.message;
+      data = grouped;
+    } catch (foundError) {
+      if (foundError instanceof OrbitItError) {
+        error = foundError;
+      } else if (foundError instanceof Error) {
+        error = new OrbitItError({
+          message: foundError.message,
+          content: [{ message: 'Failed to group commits by type.' }],
+        });
       }
     }
 
     return {
-      success,
-      message,
-      data: result,
+      error,
+      data,
     };
   }
   // #endregion - @getCommitsByType
