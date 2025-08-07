@@ -3,7 +3,7 @@ import { configSchema, writeJsonFile } from '@orbit-it/core';
 import { defineBuildConfig } from 'unbuild';
 import { z } from 'zod';
 
-export const alias = {
+export const alias: Record<string, string> = {
   '@': resolve(__dirname, './src'),
   '@lib': resolve(__dirname, './src/lib'),
   '@schemas': resolve(__dirname, './src/schemas'),
@@ -11,6 +11,16 @@ export const alias = {
 
   '@commands': resolve(__dirname, './src/lib/commands'),
 };
+
+async function generateJsonConfigSchema(): Promise<void> {
+  // Generate JSON schema from Zod schema
+  const jsonConfigSchema = z.toJSONSchema(configSchema, {
+    target: 'draft-7',
+  });
+
+  const filePath = resolve(__dirname, './assets/schema.json');
+  await writeJsonFile(filePath, jsonConfigSchema);
+}
 
 export default defineBuildConfig({
   entries: [
@@ -37,13 +47,9 @@ export default defineBuildConfig({
     },
   },
   hooks: {
-    'build:done': () => {
+    'build:done': async () => {
       // Generate JSON schema from Zod schema
-      const jsonConfigSchema = z.toJSONSchema(configSchema, {
-        target: 'draft-7',
-      });
-      const filePath = resolve(__dirname, './assets/schema.json');
-      writeJsonFile(filePath, jsonConfigSchema);
+      await generateJsonConfigSchema();
     },
   },
   alias,
