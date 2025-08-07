@@ -19,15 +19,33 @@
             "single-package"
           ]
         },
-        "envFilePath": {
-          "description": "The path to the environment file. This file contains environment variables used by the project.",
-          "default": ".env",
+        "packageManager": {
+          "description": "The package manager used in the project",
+          "default": "pnpm",
+          "type": "string",
+          "enum": [
+            "npm",
+            "yarn",
+            "pnpm"
+          ]
+        },
+        "environment": {
+          "description": "The runtime environment for the project",
+          "type": "string",
+          "enum": [
+            "nodejs",
+            "python"
+          ]
+        },
+        "envFile": {
+          "description": "Path to the environment file",
           "type": "string"
         }
       },
       "required": [
         "type",
-        "envFilePath"
+        "packageManager",
+        "environment"
       ],
       "additionalProperties": false
     },

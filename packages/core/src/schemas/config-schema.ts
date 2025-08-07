@@ -10,12 +10,14 @@ export const configSchema = z.object({
       type: z
         .enum(['monorepo', 'single-package'])
         .describe('The type of project to manage'),
-      envFilePath: z
-        .string()
-        .default('.env')
-        .describe(
-          'The path to the environment file. This file contains environment variables used by the project.'
-        ),
+      packageManager: z
+        .enum(['npm', 'yarn', 'pnpm'])
+        .default('pnpm')
+        .describe('The package manager used in the project'),
+      environment: z
+        .enum(['nodejs', 'python'])
+        .describe('The runtime environment for the project'),
+      envFile: z.string().optional().describe('Path to the environment file'),
     })
     .describe('Project configuration'),
   release: z.object({
