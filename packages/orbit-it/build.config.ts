@@ -26,32 +26,19 @@ export default defineBuildConfig({
       ext: 'mjs',
       name: 'cli',
     },
-
-    {
-      input: 'src/config.ts',
-      format: 'esm',
-      ext: 'mjs',
-      name: 'config',
-    },
-    {
-      input: 'src/config.ts',
-      format: 'cjs',
-      ext: 'cjs',
-      name: 'config',
-    },
   ],
   outDir: 'build',
   clean: true,
-  declaration: true,
+  declaration: false,
   rollup: {
     emitCJS: true,
     output: {
-      banner: (chunk) =>
-        chunk.fileName.includes('cli') && '#!/usr/bin/env node',
+      banner: '#!/usr/bin/env node',
     },
   },
   hooks: {
     'build:done': () => {
+      // Generate JSON schema from Zod schema
       const jsonConfigSchema = z.toJSONSchema(configSchema, {
         target: 'draft-7',
       });

@@ -90,36 +90,6 @@ export async function loadConfig(): Promise<FunctionResult<LoadConfigResult>> {
   };
 }
 
-/**
- * @description Defines the configuration for OrbitIt.
- * @param config The configuration object to define.
- * @returns The validated configuration object.
- * @example
- * ```ts
- * import { defineConfig } from 'orbit-it/config';
- *
- * export default defineConfig({
- *   // ...
- * });
- */
-export function defineConfig(config: Config): Config {
-  // Validate the provided configuration options
-  const parsedConfig = configSchema.safeParse(config);
-
-  if (!parsedConfig.success) {
-    throw new OrbitItError({
-      message: 'Invalid configuration options',
-      content: parsedConfig.error.issues.map((issue) => ({
-        message: issue.message,
-        target: issue.path.join('.'),
-      })),
-    });
-  }
-
-  // Return the validated configuration
-  return parsedConfig.data;
-}
-
 export async function setupConfig(
   config: Config
 ): Promise<FunctionResult<Config>> {
