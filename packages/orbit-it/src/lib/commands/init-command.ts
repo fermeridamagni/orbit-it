@@ -22,7 +22,7 @@ function initCommand(program: Command): Command {
   return program
     .command('init')
     .description('initialize the required config')
-    .option('--dry-run', 'preview the configuration without making changes')
+    .option('--dry-run', 'preview the process without making changes')
     .action(async (options: InitCommandOptions) => {
       const { dryRun } = options;
 
