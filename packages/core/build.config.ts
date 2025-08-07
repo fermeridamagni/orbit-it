@@ -1,6 +1,13 @@
 import { resolve } from 'node:path';
 import { defineBuildConfig } from 'unbuild';
 
+export const alias = {
+  '@': resolve(__dirname, './src'),
+  '@lib': resolve(__dirname, './src/lib'),
+  '@utils': resolve(__dirname, './src/utils'),
+  '@schemas': resolve(__dirname, './src/schemas'),
+};
+
 export default defineBuildConfig({
   entries: [
     {
@@ -20,10 +27,5 @@ export default defineBuildConfig({
   rollup: {
     emitCJS: true,
   },
-  alias: {
-    '@': resolve(__dirname, './src'),
-    '@lib': resolve(__dirname, './src/lib'),
-    '@utils': resolve(__dirname, './src/utils'),
-    '@schemas': resolve(__dirname, './src/schemas'),
-  },
+  alias,
 });

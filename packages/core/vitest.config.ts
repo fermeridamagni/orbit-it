@@ -1,5 +1,5 @@
-import { resolve } from 'node:path';
 import { defineConfig } from 'vitest/config';
+import { alias } from './build.config';
 
 export default defineConfig({
   test: {
@@ -7,11 +7,6 @@ export default defineConfig({
     environment: 'node',
     include: ['src/tests/**/*.{test}.ts'],
     exclude: ['node_modules', 'dist', '.turbo'],
-    alias: {
-      '@': resolve(__dirname, './src'),
-      '@lib': resolve(__dirname, './src/lib'),
-      '@utils': resolve(__dirname, './src/utils'),
-      '@schemas': resolve(__dirname, './src/schemas'),
-    },
+    alias,
   },
 });
