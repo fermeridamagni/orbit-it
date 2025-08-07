@@ -1,9 +1,9 @@
 import { envSchema } from '@schemas/env-schema';
 import { OrbitItError } from '@utils/errors';
-import { ignorePaths } from '@utils/ignorePaths';
 import fg from 'fast-glob';
 import type z from 'zod';
 import type { FunctionResult } from '@/types/functions';
+import { ignorePaths } from '@/utils/ignore-paths';
 
 export interface EnvVariables extends z.infer<typeof envSchema> {}
 
