@@ -10,11 +10,11 @@ import {
   text,
   updateSettings,
 } from '@clack/prompts';
-import { loadConfig, setupConfig } from '@orbit-it/core';
+import { loadConfig, setupConfig, setupReleaseWorkflow } from '@orbit-it/core';
 import { banner, dryRunEnabledMessage, successMessage } from '@utils/banners';
 import { onCommandFlowCancel } from '@utils/events';
 import type { Command } from 'commander';
-import { white } from 'picocolors';
+import colors from 'picocolors';
 
 export type InitCommandOptions = {
   dryRun?: boolean;
@@ -38,7 +38,7 @@ function initCommand(program: Command): Command {
         },
       });
 
-      intro(white(banner));
+      intro(colors.white(banner));
 
       if (dryRun) {
         log.info(dryRunEnabledMessage);
@@ -150,13 +150,33 @@ function initCommand(program: Command): Command {
               return 'Configuration files would be generated.';
             }
 
-            const result = await setupConfig(userConfig);
+            const setupConfigResult = await setupConfig(userConfig);
 
-            if (result.error) {
+            if (setupConfigResult.error) {
               onCommandFlowCancel('Error generating configuration files');
             }
 
-            note(JSON.stringify(result.data, null, 2), 'Configuration Preview');
+            note(
+              JSON.stringify(setupConfigResult.data, null, 2),
+              colors.bgGreen(colors.white(colors.bold('orbit-it.jsonc')))
+            );
+
+            if (userConfig.release.strategy === 'auto') {
+              message('Generating auto release configuration...');
+
+              const setupWorkflowResult = await setupReleaseWorkflow();
+
+              if (setupWorkflowResult.error) {
+                onCommandFlowCancel(setupWorkflowResult.error.message);
+              }
+
+              note(
+                setupWorkflowResult.data,
+                colors.bgGreen(
+                  colors.white(colors.bold('.github/workflows/release.yml'))
+                )
+              );
+            }
 
             return 'Configuration files generated successfully.';
           },
