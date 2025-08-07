@@ -4,13 +4,14 @@ import {
   isCancel,
   log,
   note,
+  outro,
   select,
   tasks,
   text,
   updateSettings,
 } from '@clack/prompts';
 import { loadConfig, setupConfig } from '@orbit-it/core';
-import { banner, dryRunMessage } from '@utils/banners';
+import { banner, dryRunEnabledMessage, successMessage } from '@utils/banners';
 import { onCommandFlowCancel } from '@utils/events';
 import type { Command } from 'commander';
 import { white } from 'picocolors';
@@ -40,7 +41,7 @@ function initCommand(program: Command): Command {
       intro(white(banner));
 
       if (dryRun) {
-        log.info(dryRunMessage);
+        log.info(dryRunEnabledMessage);
       }
 
       const foundConfig = await loadConfig();
@@ -139,7 +140,9 @@ function initCommand(program: Command): Command {
       const tasksResult = await tasks([
         {
           title: 'Generating configuration files',
-          task: async () => {
+          task: async (message) => {
+            message('Generating configuration files...');
+
             if (dryRun) {
               // simulate 1000ms delay for dry run
               await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -163,6 +166,8 @@ function initCommand(program: Command): Command {
       if (isCancel(tasksResult)) {
         onCommandFlowCancel('Task execution cancelled by user.');
       }
+
+      outro(successMessage);
     });
 }
 

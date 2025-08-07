@@ -1,6 +1,6 @@
 import { cancel } from '@clack/prompts';
 import type { OrbitItErrorOptions } from '@orbit-it/core';
-import { errorOutroMessage } from '@utils/banners';
+import { errorMessage } from '@utils/banners';
 import { bold, gray, red } from 'picocolors';
 
 function formatError({ message, content }: OrbitItErrorOptions): string {
@@ -16,7 +16,7 @@ function formatError({ message, content }: OrbitItErrorOptions): string {
   } else if (typeof content === 'string') {
     logContent = content;
   } else {
-    logContent = errorOutroMessage;
+    logContent = errorMessage;
   }
 
   const completeLog = `${logDate}: ${logMessage}\n\n${logContent}`;
