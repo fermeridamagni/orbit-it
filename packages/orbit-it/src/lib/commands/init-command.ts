@@ -6,6 +6,7 @@ import {
   note,
   select,
   tasks,
+  text,
   updateSettings,
 } from '@clack/prompts';
 import { loadConfig, setupConfig } from '@orbit-it/core';
@@ -74,6 +75,59 @@ function initCommand(program: Command): Command {
               type,
             };
           },
+          release: async () => {
+            const strategy = await select({
+              message: 'Select the release strategy',
+              options: [
+                {
+                  label: 'Auto',
+                  value: 'auto',
+                },
+                {
+                  label: 'Manual',
+                  value: 'manual',
+                },
+              ],
+            });
+
+            if (isCancel(strategy)) {
+              onCommandFlowCancel();
+            }
+
+            const versioningStrategy = await select({
+              message: 'Select the versioning strategy',
+              options: [
+                {
+                  label: 'Fixed',
+                  value: 'fixed',
+                },
+                {
+                  label: 'Independent',
+                  value: 'independent',
+                },
+              ],
+            });
+
+            if (isCancel(versioningStrategy)) {
+              onCommandFlowCancel();
+            }
+
+            const preReleaseIdentifier = await text({
+              message: 'Enter an optional pre-release identifier',
+              placeholder: 'beta',
+              initialValue: 'beta',
+            });
+
+            if (isCancel(preReleaseIdentifier)) {
+              onCommandFlowCancel();
+            }
+
+            return {
+              strategy,
+              versioningStrategy,
+              preReleaseIdentifier,
+            };
+          },
         },
         {
           onCancel: () => {
@@ -87,8 +141,8 @@ function initCommand(program: Command): Command {
           title: 'Generating configuration files',
           task: async () => {
             if (dryRun) {
-              // simulate 2000ms delay for dry run
-              await new Promise((resolve) => setTimeout(resolve, 2000));
+              // simulate 1000ms delay for dry run
+              await new Promise((resolve) => setTimeout(resolve, 1000));
 
               return 'Configuration files would be generated.';
             }
@@ -99,6 +153,8 @@ function initCommand(program: Command): Command {
               onCommandFlowCancel('Error generating configuration files');
             }
 
+            note(JSON.stringify(result.data, null, 2), 'Configuration Preview');
+
             return 'Configuration files generated successfully.';
           },
         },
@@ -107,8 +163,6 @@ function initCommand(program: Command): Command {
       if (isCancel(tasksResult)) {
         onCommandFlowCancel('Task execution cancelled by user.');
       }
-
-      note(JSON.stringify(userConfig, null, 2), 'Configuration Preview');
     });
 }
 
