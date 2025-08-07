@@ -1,13 +1,16 @@
 import { envSchema } from '@schemas/env-schema';
 import { OrbitItError } from '@utils/errors';
 import { ignorePaths } from '@utils/ignore-paths';
+import type { Config } from '@utils/load-config';
 import fg from 'fast-glob';
 import type z from 'zod';
 import type { FunctionResult } from '@/types/functions';
 
 export interface EnvVariables extends z.infer<typeof envSchema> {}
 
-export async function loadEnv(): Promise<FunctionResult<EnvVariables>> {
+export async function loadEnv(
+  config: Config
+): Promise<FunctionResult<EnvVariables>> {
   let error: OrbitItError | undefined;
   let data: EnvVariables | undefined;
 
@@ -32,7 +35,7 @@ export async function loadEnv(): Promise<FunctionResult<EnvVariables>> {
       });
     }
 
-    if (entries.length > 1) {
+    if (entries.length > 1 && !config.project.envFilePath) {
       throw new OrbitItError({
         message: 'Multiple .env files found',
         content: [
@@ -44,8 +47,29 @@ export async function loadEnv(): Promise<FunctionResult<EnvVariables>> {
       });
     }
 
-    // Load the first .env file found
-    process.loadEnvFile(entries[0]);
+    let envFilePath = '' as string;
+
+    if (config.project.envFilePath) {
+      const foundEnvFile = entries.find((entry) =>
+        entry.endsWith(config.project.envFilePath)
+      );
+
+      if (!foundEnvFile) {
+        throw new OrbitItError({
+          message: `Specified .env file "${config.project.envFilePath}" not found`,
+          content: [
+            {
+              message:
+                'Please ensure the specified .env file exists in the root directory.',
+            },
+          ],
+        });
+      }
+
+      envFilePath = foundEnvFile;
+    }
+
+    process.loadEnvFile(envFilePath || entries[0]);
 
     // Validate environment variables
     const parsedEnv = envSchema.safeParse(process.env);
