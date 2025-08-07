@@ -32,6 +32,18 @@ export async function loadEnv(): Promise<FunctionResult<EnvVariables>> {
       });
     }
 
+    if (entries.length > 1) {
+      throw new OrbitItError({
+        message: 'Multiple .env files found',
+        content: [
+          {
+            message:
+              'Please ensure only one .env file exists in the root directory. Or define a specific .env file to load in the root config.',
+          },
+        ],
+      });
+    }
+
     // Load the first .env file found
     process.loadEnvFile(entries[0]);
 
