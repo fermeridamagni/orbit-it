@@ -15,6 +15,21 @@
         "!**/.cache/**",
         "./**/*.{json,jsonc,ts,tsx,js,jsx,html,css,graphql}"
       ]
+    },
+    {
+      "includes": ["**/*.astro"],
+      "linter": {
+        "rules": {
+          "style": {
+            "useConst": "off",
+            "useImportType": "off"
+          },
+          "correctness": {
+            "noUnusedVariables": "off",
+            "noUnusedImports": "off"
+          }
+        }
+      }
     }
   ]
 }
