@@ -1,7 +1,7 @@
 import { resolve } from 'node:path';
 import { defineBuildConfig } from 'unbuild';
 
-export const alias = {
+export const alias: Record<string, string> = {
   '@': resolve(__dirname, './src'),
   '@lib': resolve(__dirname, './src/lib'),
   '@utils': resolve(__dirname, './src/utils'),
