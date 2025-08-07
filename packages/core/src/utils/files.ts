@@ -1,7 +1,8 @@
 import fs from 'node:fs';
+import path from 'node:path';
 
-export const dirExists = (path: string): boolean => {
-  return fs.existsSync(path);
+export const dirExists = (foundPath: string): boolean => {
+  return fs.existsSync(foundPath);
 };
 
 /**
@@ -10,7 +11,10 @@ export const dirExists = (path: string): boolean => {
  * @returns The parsed JSON content
  */
 export const readJsonFile = async (filePath: string) => {
-  const data = await fs.promises.readFile(filePath, 'utf8');
+  const data = await fs.promises.readFile(filePath, {
+    encoding: 'utf8',
+  });
+
   return JSON.parse(data);
 };
 
@@ -23,9 +27,19 @@ export const writeJsonFile = async (
   filePath: string,
   data: object
 ): Promise<void> => {
+  const fullpath = path.resolve(filePath);
+  const dir = path.dirname(fullpath);
+
+  // Ensure the directory exists
+  if (!dirExists(dir)) {
+    await fs.promises.mkdir(dir, { recursive: true });
+  }
+
   // Write the file asynchronously
   // Use 'utf8' encoding to ensure the file is written as a text file
-  await fs.promises.writeFile(filePath, JSON.stringify(data, null, 2), 'utf8');
+  await fs.promises.writeFile(fullpath, JSON.stringify(data, null, 2), {
+    encoding: 'utf8',
+  });
 };
 
 /**
@@ -36,7 +50,10 @@ export const writeJsonFile = async (
 export const readMdFile = async (filePath: string) => {
   // Read the file asynchronously
   // Use 'utf8' encoding to ensure the file is read as a text file
-  const data = await fs.promises.readFile(filePath, 'utf8');
+  const data = await fs.promises.readFile(filePath, {
+    encoding: 'utf8',
+  });
+
   return data;
 };
 
@@ -50,9 +67,19 @@ export const writeMdFile = async (
   filePath: string,
   data: string
 ): Promise<void> => {
+  const fullpath = path.resolve(filePath);
+  const dir = path.dirname(fullpath);
+
+  // Ensure the directory exists
+  if (!dirExists(dir)) {
+    await fs.promises.mkdir(dir, { recursive: true });
+  }
+
   // Write the file asynchronously
   // Use 'utf8' encoding to ensure the file is written as a text file
-  await fs.promises.writeFile(filePath, data, 'utf8');
+  await fs.promises.writeFile(fullpath, data, {
+    encoding: 'utf8',
+  });
 };
 
 /**
@@ -67,5 +94,32 @@ export const appendMdFile = async (
 ): Promise<void> => {
   // Append to the file asynchronously
   // Use 'utf8' encoding to ensure the file is written as a text file
-  await fs.promises.appendFile(filePath, data, 'utf8');
+  await fs.promises.appendFile(filePath, data, {
+    encoding: 'utf8',
+  });
+};
+
+/**
+ * @description Writes a yml file asynchronously
+ * @param filePath - The path to the yml file
+ * @param data - The data to write to the yml file
+ * @returns A promise that resolves when the write operation is complete
+ */
+export const writeYmlFile = async (
+  filePath: string,
+  data: string
+): Promise<void> => {
+  const fullpath = path.resolve(filePath);
+  const dir = path.dirname(fullpath);
+
+  // Ensure the directory exists
+  if (!dirExists(dir)) {
+    await fs.promises.mkdir(dir, { recursive: true });
+  }
+
+  // Write the file asynchronously
+  // Use 'utf8' encoding to ensure the file is written as a text file
+  await fs.promises.writeFile(fullpath, data, {
+    encoding: 'utf8',
+  });
 };
