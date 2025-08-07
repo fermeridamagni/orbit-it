@@ -1,22 +1,26 @@
-import { configOptionsSchema, configSchema } from '@schemas/config-schema';
+import { configSchema } from '@schemas/config-schema';
 import { OrbitItError } from '@utils/errors';
+import { readJsonFile, writeJsonFile } from '@utils/files';
 import { ignorePaths } from '@utils/ignorePaths';
 import fg from 'fast-glob';
 import { bold } from 'picocolors';
 import type { z } from 'zod';
 import type { FunctionResult } from '@/types/functions';
-import { writeJsonFile } from './files';
 
-export const configFileName = 'orbit-it.config';
+const configFileName = 'orbit-it';
 
 export interface Config extends z.infer<typeof configSchema> {}
 
-export async function loadConfig(): Promise<FunctionResult<Config>> {
+export type LoadConfigResult = Config & {
+  path: string;
+};
+
+export async function loadConfig(): Promise<FunctionResult<LoadConfigResult>> {
   let error: OrbitItError | undefined;
-  let data: Config | undefined;
+  let data: LoadConfigResult | undefined;
 
   try {
-    const exts = ['json', 'jsonc', 'js', 'ts'];
+    const exts = ['json', 'jsonc'];
 
     const entries = await fg(`./**/${configFileName}.{${exts.join(',')}}`, {
       cwd: process.cwd(),
@@ -36,23 +40,23 @@ export async function loadConfig(): Promise<FunctionResult<Config>> {
       });
     }
 
-    let configFilePath: string | undefined;
-
-    // Find the first valid config file
-    for (const entry of entries) {
-      if (exts.includes(entry.split('.').pop() || '')) {
-        configFilePath = entry;
-        break;
-      }
+    if (entries.length > 1) {
+      throw new OrbitItError({
+        message: 'Multiple configuration files found',
+        content: [
+          {
+            message: `Found multiple configuration files: ${entries.join(', ')}`,
+          },
+        ],
+      });
     }
 
-    // Import the configuration file dynamically
-    const configModule = await import(configFilePath);
+    // Read and load the first found configuration file
+    const configFilePath = entries[0];
+    const foundConfig = await readJsonFile(configFilePath);
 
     // Validate the imported configuration against the schema
-    const parsedConfig = configSchema.safeParse(
-      configModule.default || configModule
-    );
+    const parsedConfig = configSchema.safeParse(foundConfig);
 
     if (!parsedConfig.success) {
       throw new OrbitItError({
@@ -64,7 +68,10 @@ export async function loadConfig(): Promise<FunctionResult<Config>> {
       });
     }
 
-    data = parsedConfig.data;
+    data = {
+      path: configFilePath,
+      ...parsedConfig.data,
+    };
   } catch (foundError) {
     if (foundError instanceof OrbitItError) {
       error = foundError;
@@ -83,11 +90,21 @@ export async function loadConfig(): Promise<FunctionResult<Config>> {
   };
 }
 
-export interface ConfigOptions extends z.infer<typeof configOptionsSchema> {}
-
-export function defineConfig(config: ConfigOptions): Config {
+/**
+ * @description Defines the configuration for OrbitIt.
+ * @param config The configuration object to define.
+ * @returns The validated configuration object.
+ * @example
+ * ```ts
+ * import { defineConfig } from 'orbit-it/config';
+ *
+ * export default defineConfig({
+ *   // ...
+ * });
+ */
+export function defineConfig(config: Config): Config {
   // Validate the provided configuration options
-  const parsedConfig = configOptionsSchema.safeParse(config);
+  const parsedConfig = configSchema.safeParse(config);
 
   if (!parsedConfig.success) {
     throw new OrbitItError({
@@ -103,15 +120,15 @@ export function defineConfig(config: ConfigOptions): Config {
   return parsedConfig.data;
 }
 
-export async function createConfig(
-  config: ConfigOptions
+export async function setupConfig(
+  config: Config
 ): Promise<FunctionResult<Config>> {
   let error: OrbitItError | undefined;
   let data: Config | undefined;
 
   try {
     // Validate the provided configuration options
-    const parsedConfig = configOptionsSchema.safeParse(config);
+    const parsedConfig = configSchema.safeParse(config);
 
     if (!parsedConfig.success) {
       throw new OrbitItError({
@@ -129,7 +146,7 @@ export async function createConfig(
       // Add any default values or transformations here if needed
     };
 
-    await writeJsonFile(`./${configFileName}.json`, data);
+    await writeJsonFile(`./${configFileName}.jsonc`, data);
   } catch (foundError) {
     if (foundError instanceof OrbitItError) {
       error = foundError;

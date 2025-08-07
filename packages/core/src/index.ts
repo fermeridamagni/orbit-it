@@ -1,5 +1,7 @@
 export * from '@lib/git-client';
 export * from '@lib/github-client';
+export * from '@schemas/config-schema';
+export * from '@schemas/env-schema';
 export * from '@utils/errors';
 export * from '@utils/files';
 export * from '@utils/ignorePaths';
