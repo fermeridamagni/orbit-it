@@ -7,8 +7,9 @@ export const alias = {
   '@': resolve(__dirname, './src'),
   '@lib': resolve(__dirname, './src/lib'),
   '@schemas': resolve(__dirname, './src/schemas'),
-  '@commands': resolve(__dirname, './src/commands'),
   '@utils': resolve(__dirname, './src/utils'),
+
+  '@commands': resolve(__dirname, './src/lib/commands'),
 };
 
 export default defineBuildConfig({

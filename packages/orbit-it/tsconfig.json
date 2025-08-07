@@ -10,8 +10,9 @@
       "@/*": ["src/*"],
       "@lib/*": ["src/lib/*"],
       "@schemas/*": ["src/schemas/*"],
-      "@commands/*": ["src/commands/*"],
-      "@utils/*": ["src/utils/*"]
+      "@utils/*": ["src/utils/*"],
+
+      "@commands/*": ["src/lib/commands/*"]
     }
   },
   "exclude": ["node_modules", "build", ".turbo"],

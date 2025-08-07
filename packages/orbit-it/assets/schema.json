@@ -14,21 +14,13 @@
         "type": {
           "description": "The type of project to manage",
           "type": "string",
-          "enum": [
-            "monorepo",
-            "single-package"
-          ]
+          "enum": ["monorepo", "single-package"]
         }
       },
-      "required": [
-        "type"
-      ],
+      "required": ["type"],
       "additionalProperties": false
     }
   },
-  "required": [
-    "$schema",
-    "project"
-  ],
+  "required": ["$schema", "project"],
   "additionalProperties": false
 }
