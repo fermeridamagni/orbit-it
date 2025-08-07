@@ -35,7 +35,7 @@ export async function loadEnv(
       });
     }
 
-    if (entries.length > 1 && !config.project.envFilePath) {
+    if (entries.length > 1 && !config.project.envFile) {
       throw new OrbitItError({
         message: 'Multiple .env files found',
         content: [
@@ -49,14 +49,14 @@ export async function loadEnv(
 
     let envFilePath = '' as string;
 
-    if (config.project.envFilePath) {
+    if (config.project.envFile) {
       const foundEnvFile = entries.find((entry) =>
-        entry.endsWith(config.project.envFilePath)
+        entry.endsWith(config.project.envFile)
       );
 
       if (!foundEnvFile) {
         throw new OrbitItError({
-          message: `Specified .env file "${config.project.envFilePath}" not found`,
+          message: `Specified .env file "${config.project.envFile}" not found`,
           content: [
             {
               message:
