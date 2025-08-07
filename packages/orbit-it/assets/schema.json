@@ -14,13 +14,62 @@
         "type": {
           "description": "The type of project to manage",
           "type": "string",
-          "enum": ["monorepo", "single-package"]
+          "enum": [
+            "monorepo",
+            "single-package"
+          ]
+        },
+        "envFilePath": {
+          "description": "The path to the environment file. This file contains environment variables used by the project.",
+          "default": ".env",
+          "type": "string"
         }
       },
-      "required": ["type"],
+      "required": [
+        "type",
+        "envFilePath"
+      ],
+      "additionalProperties": false
+    },
+    "release": {
+      "type": "object",
+      "properties": {
+        "strategy": {
+          "description": "The release strategy to use. Auto means releases are managed automatically, manual means you control when releases happen.",
+          "default": "auto",
+          "type": "string",
+          "enum": [
+            "auto",
+            "manual"
+          ]
+        },
+        "versioningStrategy": {
+          "description": "The versioning strategy to use. Fixed means all packages share the same version, independent means each package can have its own version.",
+          "default": "fixed",
+          "type": "string",
+          "enum": [
+            "fixed",
+            "independent"
+          ]
+        },
+        "preReleaseIdentifier": {
+          "description": "An optional pre-release identifier to append to versions, e.g., \"alpha\", \"beta\", etc.",
+          "default": "beta",
+          "type": "string"
+        }
+      },
+      "required": [
+        "strategy",
+        "versioningStrategy",
+        "preReleaseIdentifier"
+      ],
       "additionalProperties": false
     }
   },
-  "required": ["$schema", "project"],
+  "required": [
+    "$schema",
+    "project",
+    "release"
+  ],
   "additionalProperties": false
 }
