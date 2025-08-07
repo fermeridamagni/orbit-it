@@ -24,11 +24,16 @@ const commitMessageRegex =
 
 export class GitHubClient {
   client: Octokit | null = null;
-  gitClient: GitClient;
+  gitClient?: GitClient | null = null;
 
   constructor({ gitClient }: GitHubClientOptions) {
     this.init();
-    this.gitClient = gitClient || new GitClient();
+
+    // If a GitClient instance is provided, use it
+    // Otherwise, it will be null and we can handle it gracefully
+    if (gitClient instanceof GitClient) {
+      this.gitClient = gitClient;
+    }
   }
 
   // #region - @init
@@ -355,6 +360,17 @@ export class GitHubClient {
     let data: GroupCommitsByType | undefined;
 
     try {
+      if (!this.gitClient) {
+        throw new OrbitItError({
+          message: 'Git client is not initialized',
+          content: [
+            {
+              message: 'Please ensure a valid GitClient instance is provided.',
+            },
+          ],
+        });
+      }
+
       const commits = await this.gitClient.getCommits();
 
       if (commits.error || !commits.data) {
