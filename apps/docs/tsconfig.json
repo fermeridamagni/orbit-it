@@ -15,6 +15,6 @@
       "@lib/*": ["src/lib/*"]
     }
   },
-  "include": [".astro/types.d.ts", "src/**/*"],
+  "include": [".astro/types.d.ts", "./**/*.{ts,tsx}"],
   "exclude": ["node_modules", "dist"]
 }
