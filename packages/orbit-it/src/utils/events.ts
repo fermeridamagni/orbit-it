@@ -1,17 +1,17 @@
 import { cancel } from '@clack/prompts';
 import type { OrbitItErrorOptions } from '@orbit-it/core';
 import { errorMessage } from '@utils/banners';
-import { bold, gray, red } from 'picocolors';
+import colors from 'picocolors';
 
 function formatError({ message, content }: OrbitItErrorOptions): string {
   const date = new Date().toLocaleString();
-  const logDate = gray(`[${date}]`);
-  const logMessage = bold(message || 'Unknown error');
+  const logDate = colors.gray(`[${date}]`);
+  const logMessage = colors.bold(message || 'Unknown error');
   let logContent: string | string[] = '';
 
   if (Array.isArray(content) && content.length > 0) {
     logContent = content.map((msg) => {
-      return `- ${msg.target ? `[${red(`${msg.target}`)}]: ` : ''}${msg.message}`;
+      return `- ${msg.target ? `[${colors.red(`${msg.target}`)}]: ` : ''}${msg.message}`;
     });
   } else if (typeof content === 'string') {
     logContent = content;
