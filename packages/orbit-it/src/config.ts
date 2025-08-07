@@ -1,1 +1,1 @@
-export { Config, createConfig } from '@orbit-it/core';
+export { type Config, defineConfig } from '@orbit-it/core';

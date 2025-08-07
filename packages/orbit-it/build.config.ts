@@ -1,5 +1,7 @@
 import { resolve } from 'node:path';
+import { configSchema, writeJsonFile } from '@orbit-it/core';
 import { defineBuildConfig } from 'unbuild';
+import { z } from 'zod';
 
 export const alias = {
   '@': resolve(__dirname, './src'),
@@ -43,9 +45,17 @@ export default defineBuildConfig({
   rollup: {
     emitCJS: true,
     output: {
-      banner: (chunk) => {
-        return chunk.fileName.includes('cli') ? '#!/usr/bin/env node' : '';
-      },
+      banner: (chunk) =>
+        chunk.fileName.includes('cli') && '#!/usr/bin/env node',
+    },
+  },
+  hooks: {
+    'build:done': () => {
+      const jsonConfigSchema = z.toJSONSchema(configSchema, {
+        target: 'draft-7',
+      });
+      const filePath = resolve(__dirname, './assets/schema.json');
+      writeJsonFile(filePath, jsonConfigSchema);
     },
   },
   alias,

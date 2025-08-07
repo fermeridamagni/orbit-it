@@ -41,7 +41,7 @@ export function onProcessCancel({
 }
 
 /**
- * @description Handles the cancellation of a @clack/prompts command flow.
+ * @description Handles the cancellation of a `@clack/prompts` command flow.
  * @param message - Optional message to display on cancellation.
  */
 export function onCommandFlowCancel(message?: string): never {

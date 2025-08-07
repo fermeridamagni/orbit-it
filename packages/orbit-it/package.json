@@ -39,10 +39,12 @@
         "types": "./build/config.d.cts",
         "default": "./build/config.cjs"
       }
-    }
+    },
+    "./schema": "./assets/schema.json"
   },
   "files": [
     "build",
+    "assets",
     "package.json",
     "README.md",
     "LICENSE"
@@ -56,8 +58,8 @@
     "test:ui": "vitest --ui"
   },
   "dependencies": {
-    "@orbit-it/core": "workspace:*",
     "@clack/prompts": "^0.11.0",
+    "@orbit-it/core": "workspace:*",
     "commander": "^14.0.0",
     "fast-glob": "^3.3.3",
     "picocolors": "^1.1.1",
