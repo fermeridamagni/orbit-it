@@ -44,9 +44,11 @@
     "test:watch": "vitest --watch",
     "test:ui": "vitest --ui"
   },
+  "peerDependencies": {
+    "zod": "^4.0.15"
+  },
   "dependencies": {
     "@octokit/rest": "^22.0.0",
-    "zod": "^4.0.14",
     "fast-glob": "^3.3.3",
     "picocolors": "^1.1.1",
     "simple-git": "^3.28.0"
