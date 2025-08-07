@@ -1,7 +1,7 @@
 import { configSchema } from '@schemas/config-schema';
 import { OrbitItError } from '@utils/errors';
 import { readJsonFile, writeJsonFile } from '@utils/files';
-import { ignorePaths } from '@utils/ignorePaths';
+import { ignorePaths } from '@utils/ignore-paths';
 import fg from 'fast-glob';
 import { bold } from 'picocolors';
 import type { z } from 'zod';
