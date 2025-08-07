@@ -4,6 +4,7 @@ export * from '@schemas/config-schema';
 export * from '@schemas/env-schema';
 export * from '@utils/errors';
 export * from '@utils/files';
+export * from '@utils/github-workflows';
+export * from '@utils/ignore-paths';
 export * from '@utils/load-config';
 export * from '@utils/load-env';
-export * from '@/utils/ignore-paths';
