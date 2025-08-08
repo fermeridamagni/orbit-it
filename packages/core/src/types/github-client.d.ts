@@ -1,5 +1,4 @@
 import type { RestEndpointMethodTypes } from '@octokit/rest';
-import type { Commit, CommitType } from './git-client';
 
 /**
  * @description The result of getting user information.
@@ -33,8 +32,3 @@ export type ListReleasesResult =
  * @description The result of checking if a repository exists.
  */
 export type CheckRepoExistsResult = boolean;
-
-/**
- * @description The result of getting commits grouped by type.
- */
-export type GroupCommitsByType = Record<CommitType, Commit[]> | null;
