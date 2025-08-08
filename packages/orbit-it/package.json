@@ -11,7 +11,7 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/fermeridamagni/orbit-it.git",
-    "directory": "packages/cli"
+    "directory": "packages/orbit-it"
   },
   "bugs": {
     "url": "https://github.com/fermeridamagni/orbit-it/issues",
