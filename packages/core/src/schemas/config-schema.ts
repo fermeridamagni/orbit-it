@@ -15,9 +15,9 @@ export const configSchema = z.object({
         .default('pnpm')
         .describe('The package manager used in the project'),
       environment: z
-        .enum(['nodejs', 'python'])
+        .enum(['nodejs', 'python', 'unknown'])
+        .default('unknown')
         .describe('The runtime environment for the project'),
-      envFile: z.string().optional().describe('Path to the environment file'),
     })
     .describe('Project configuration'),
   release: z.object({
