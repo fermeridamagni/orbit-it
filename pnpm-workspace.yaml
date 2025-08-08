@@ -1,8 +1,9 @@
 packages:
   - apps/*
   - packages/*
+  - extensions/*
 
 onlyBuiltDependencies:
-  - '@tailwindcss/oxide'
+  - "@tailwindcss/oxide"
   - esbuild
   - sharp
