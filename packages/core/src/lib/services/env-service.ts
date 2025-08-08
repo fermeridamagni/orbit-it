@@ -23,7 +23,7 @@ class EnvService {
         absolute: true,
       });
 
-      if (isPython) {
+      if (isPython.length > 0) {
         return {
           data: 'python',
         };
@@ -36,7 +36,7 @@ class EnvService {
         absolute: true,
       });
 
-      if (isNodejs) {
+      if (isNodejs.length > 0) {
         return {
           data: 'nodejs',
         };
