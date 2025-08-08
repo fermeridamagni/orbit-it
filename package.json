@@ -5,13 +5,12 @@
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev",
-    "check-types": "turbo run check-types",
     "format": "pnpm dlx ultracite format",
     "lint": "pnpm dlx ultracite lint"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.1.3",
-    "@types/node": "^24.2.0",
+    "@biomejs/biome": "2.1.4",
+    "@types/node": "^24.2.1",
     "husky": "^9.1.7",
     "orbit-it": "workspace:*",
     "turbo": "^2.5.5",
