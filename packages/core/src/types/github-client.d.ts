@@ -1,13 +1,5 @@
-import type { GitClient } from '@lib/git-client';
 import type { RestEndpointMethodTypes } from '@octokit/rest';
 import type { Commit, CommitType } from './git-client';
-
-/**
- * @description The options for the GitHub client.
- */
-export type GitHubClientOptions = {
-  gitClient?: GitClient;
-};
 
 /**
  * @description The result of getting user information.
