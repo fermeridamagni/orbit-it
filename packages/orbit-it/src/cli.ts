@@ -1,4 +1,5 @@
-import initCommand from '@lib/commands/init-command';
+import initCommand from '@commands/init-command';
+import releaseCommand from '@commands/release-command';
 import { banner, descriptionMessage } from '@utils/banners';
 import { Command } from 'commander';
 // @ts-expect-error Error: TypeScript does not recognize the import of JSON files by default.
@@ -14,6 +15,7 @@ program
 
 // Register commands
 initCommand(program);
+releaseCommand(program);
 
 // Handle unknown commands
 program.parse(process.argv);
