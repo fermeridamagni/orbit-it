@@ -3,7 +3,6 @@ import { OrbitItError } from '@utils/errors';
 import { readJsonFile, writeJsonFile, writeYmlFile } from '@utils/files';
 import { ignorePaths } from '@utils/paths';
 import fg from 'fast-glob';
-import colors from 'picocolors';
 import type z from 'zod';
 import type { FunctionResult } from '@/types/functions';
 
@@ -77,7 +76,8 @@ export class ConfigService {
           message: 'No configuration file found',
           content: [
             {
-              message: `Run ${colors.bold('`orbit-it init`')} or see the documentation for more information.`,
+              message:
+                'Run `orbit-it init` or see the documentation for more information.',
             },
           ],
         });
