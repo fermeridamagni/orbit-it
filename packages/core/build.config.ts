@@ -4,6 +4,7 @@ import { defineBuildConfig } from 'unbuild';
 export const alias: Record<string, string> = {
   '@': resolve(__dirname, './src'),
   '@lib': resolve(__dirname, './src/lib'),
+  '@services': resolve(__dirname, './src/lib/services'),
   '@utils': resolve(__dirname, './src/utils'),
   '@schemas': resolve(__dirname, './src/schemas'),
 };
