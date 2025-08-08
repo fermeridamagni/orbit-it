@@ -4,8 +4,6 @@
  */
 
 import { OrbitItError } from '@utils/errors';
-import colors from 'picocolors';
-import type { Formatter } from 'picocolors/types';
 import simpleGit, { type SimpleGit } from 'simple-git';
 import type { FunctionResult } from '@/types/functions';
 import type {
@@ -560,51 +558,6 @@ export class GitClient {
     };
   }
   // #endregion - @pushTags
-
-  // #region - @getChangeType
-  /**
-   * @description Returns the console color and label for a given change type.
-   * @param type - The type of change (e.g., "a" for added, "m" for modified).
-   * @returns {consoleColor: Formatter; label: string;} An object containing the console color and label for the change type.
-   */
-  getChangeType = (
-    type: string
-  ): {
-    consoleColor: Formatter;
-    label: string;
-  } => {
-    let consoleColor: Formatter;
-    let label: string;
-
-    switch (type.toLocaleLowerCase()) {
-      case 'a':
-        consoleColor = colors.green;
-        label = 'Added';
-        break;
-      case 'm':
-        consoleColor = colors.blue;
-        label = 'Modified';
-        break;
-      case 'd':
-        consoleColor = colors.red;
-        label = 'Deleted';
-        break;
-      case 'r':
-        consoleColor = colors.yellow;
-        label = 'Renamed';
-        break;
-      case '?':
-        consoleColor = colors.cyan;
-        label = 'Untracked';
-        break;
-      default:
-        consoleColor = colors.white;
-        label = 'Unknown';
-    }
-
-    return { consoleColor, label };
-  };
-  // #endregion - @getChangeType
 
   // #region - @constructCommitMessage
   /**
