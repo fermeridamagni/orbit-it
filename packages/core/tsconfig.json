@@ -1,6 +1,11 @@
 {
   "compilerOptions": {
+    "module": "nodenext",
+    "target": "es2024",
+    "lib": ["es2024"],
+    "moduleResolution": "nodenext",
     "esModuleInterop": true,
+    "resolveJsonModule": true,
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"],
@@ -10,6 +15,6 @@
       "@schemas/*": ["src/schemas/*"]
     }
   },
-  "exclude": ["node_modules", "build", ".turbo"],
-  "include": ["src"]
+  "include": ["src"],
+  "exclude": ["node_modules", "build", ".turbo"]
 }
