@@ -10,7 +10,7 @@ import {
   text,
   updateSettings,
 } from '@clack/prompts';
-import { loadConfig, setupConfig, setupReleaseWorkflow } from '@orbit-it/core';
+import { OrbitIt } from '@orbit-it/core';
 import { banner, dryRunEnabledMessage, successMessage } from '@utils/banners';
 import { onCommandFlowCancel } from '@utils/events';
 import type { Command } from 'commander';
@@ -44,7 +44,9 @@ function initCommand(program: Command): Command {
         log.info(dryRunEnabledMessage);
       }
 
-      const foundConfig = await loadConfig();
+      const orbitIt = new OrbitIt();
+
+      const foundConfig = await orbitIt.config.get();
 
       if (foundConfig.data) {
         note(JSON.stringify(foundConfig.data, null, 2), 'Found Configuration');
@@ -150,7 +152,7 @@ function initCommand(program: Command): Command {
               return 'Configuration files would be generated.';
             }
 
-            const setupConfigResult = await setupConfig(userConfig);
+            const setupConfigResult = await orbitIt.config.setup(userConfig);
 
             if (setupConfigResult.error) {
               onCommandFlowCancel('Error generating configuration files');
@@ -164,7 +166,8 @@ function initCommand(program: Command): Command {
             if (userConfig.release.strategy === 'auto') {
               message('Generating auto release configuration...');
 
-              const setupWorkflowResult = await setupReleaseWorkflow();
+              const setupWorkflowResult =
+                await orbitIt.config.setupReleaseWorkflow();
 
               if (setupWorkflowResult.error) {
                 onCommandFlowCancel(setupWorkflowResult.error.message);
