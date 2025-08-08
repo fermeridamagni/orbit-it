@@ -1,10 +1,12 @@
-export * from '@lib/git-client';
-export * from '@lib/github-client';
-export * from '@schemas/config-schema';
-export * from '@schemas/env-schema';
-export * from '@utils/errors';
-export * from '@utils/files';
-export * from '@utils/github-workflows';
-export * from '@utils/ignore-paths';
-export * from '@utils/load-config';
-export * from '@utils/load-env';
+import { ConfigService } from '@services/config-service';
+
+export class OrbitItClient {
+  config: ConfigService;
+
+  constructor() {
+    this.config = new ConfigService();
+  }
+}
+
+export type { Config } from '@services/config-service';
+export default OrbitItClient;
