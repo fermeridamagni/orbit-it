@@ -1,0 +1,31 @@
+{
+  "name": "orbit-it-vscode",
+  "displayName": "Orbit It",
+  "description": "A comprehensive toolkit for managing and interacting with Git and GitHub, including version control, issue tracking, and repository management.",
+  "version": "1.0.0-beta.1",
+  "categories": [
+    "Other"
+  ],
+  "contributes": {
+    "commands": []
+  },
+  "main": "./build/extension.cjs",
+  "scripts": {
+    "build": "unbuild",
+    "dev": "unbuild --stub",
+    "test": "vitest --run",
+    "test:watch": "vitest --watch",
+    "test:ui": "vitest --ui"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@types/node": "24.2.1",
+    "@types/vscode": "^1.102.0",
+    "typescript": "^5.9.2",
+    "unbuild": "^3.6.0",
+    "vitest": "^3.2.4"
+  },
+  "engines": {
+    "vscode": "^1.102.0"
+  }
+}

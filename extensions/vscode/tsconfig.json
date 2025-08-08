@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    "target": "es2024",
+    "lib": ["ES2024"],
+    "strict": true,
+    "rootDir": ".",
+    "baseUrl": "."
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "build", ".turbo"]
+}
