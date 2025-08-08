@@ -36,6 +36,7 @@ export const ignoreNodejsPaths: string[] = [
   '**/coverage/**',
   '**/.turbo/**',
   '**/.next/**',
+  '**/.astro/**',
   '**/.nuxt/**',
 ];
 
