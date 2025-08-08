@@ -1,6 +1,6 @@
 import { ConfigService } from '@services/config-service';
 
-export class OrbitItClient {
+export class OrbitIt {
   config: ConfigService;
 
   constructor() {
@@ -9,4 +9,4 @@ export class OrbitItClient {
 }
 
 export type { Config } from '@services/config-service';
-export default OrbitItClient;
+export { OrbitItError, type OrbitItErrorOptions } from '@utils/errors';
