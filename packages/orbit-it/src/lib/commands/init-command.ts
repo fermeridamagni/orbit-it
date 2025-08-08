@@ -53,6 +53,14 @@ function initCommand(program: Command): Command {
         return;
       }
 
+      const foundEnv = await orbitIt.env.detectEnvironment();
+
+      if (foundEnv.error) {
+        onCommandFlowCancel(foundEnv.error.message);
+      }
+
+      log.info(`Detected environment: ${colors.cyan(foundEnv.data)}`);
+
       const userConfig = await group(
         {
           project: async () => {
@@ -76,6 +84,7 @@ function initCommand(program: Command): Command {
 
             return {
               type,
+              environment: foundEnv.data,
             };
           },
           release: async () => {
