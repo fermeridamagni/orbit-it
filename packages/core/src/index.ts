@@ -1,10 +1,13 @@
-import { ConfigService } from '@services/config-service';
+import ConfigService from '@services/config-service';
+import EnvService from '@services/env-service';
 
 export class OrbitIt {
   config: ConfigService;
+  env: EnvService;
 
   constructor() {
     this.config = new ConfigService();
+    this.env = new EnvService();
   }
 }
 

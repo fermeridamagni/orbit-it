@@ -10,7 +10,7 @@ export interface Config extends z.infer<typeof configSchema> {}
 
 const configFileName = 'orbit-it';
 
-export class ConfigService {
+class ConfigService {
   private config: Config | undefined = undefined;
 
   async get(): Promise<FunctionResult<Config>> {
@@ -249,3 +249,5 @@ jobs:
     return content;
   }
 }
+
+export default ConfigService;
