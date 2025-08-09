@@ -18,6 +18,10 @@ export const configSchema = z.object({
         .enum(['nodejs', 'python', 'unknown'])
         .default('unknown')
         .describe('The runtime environment for the project'),
+      workspaces: z
+        .array(z.string())
+        .default(['packages/*', 'apps/*'])
+        .describe('The workspaces in the project'),
     })
     .describe('Project configuration'),
   release: z.object({
