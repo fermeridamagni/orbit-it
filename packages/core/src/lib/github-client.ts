@@ -9,21 +9,18 @@ import { OrbitItError } from '@utils/errors';
 import type { FunctionResult } from '@/types/functions';
 import type {
   CheckRepoExistsResult,
+  CreateReleaseOptions,
   CreateReleaseResult,
   GetRepoInfoResult,
   GetUserInfoResult,
   ListReleasesResult,
 } from '@/types/github-client';
 
-export interface GitHubClientOptions {
-  token: string;
-}
-
 export class GitHubClient {
-  client: Octokit | null = null;
+  private client: Octokit | null = null;
 
-  constructor(options: GitHubClientOptions) {
-    this.init(options);
+  constructor(token: string) {
+    this.init(token);
   }
 
   // #region - @init
@@ -31,9 +28,7 @@ export class GitHubClient {
    * @description Initializes the GitHub client with a personal access token.
    * @param token - The personal access token for GitHub API authentication.
    */
-  private init(options: GitHubClientOptions): void {
-    const { token } = options;
-
+  private init(token: string): void {
     this.client = new Octokit({ auth: token });
   }
   // #endregion - @init
@@ -129,22 +124,19 @@ export class GitHubClient {
   // #region - @createRelease
   /**
    * @description Creates a new release for a repository.
-   * @param owner - The owner of the repository.
-   * @param repo - The name of the repository.
-   * @param tagName - The name of the tag to create the release for.
-   * @param releaseName - The name of the release.
-   * @param body - The body content of the release.
-   * @param prerelease - Whether this is a prerelease.
+   * @param options - The options for creating the release.
+   * @see {@link CreateReleaseOptions}
    * @returns A promise that resolves to the created release information.
    */
-  async createRelease(
-    owner: string,
-    repo: string,
-    tagName: string,
-    releaseName: string,
-    body: string,
-    prerelease = false
-  ): Promise<FunctionResult<CreateReleaseResult>> {
+  async createRelease({
+    owner,
+    repo,
+    tagName,
+    releaseName,
+    body,
+    prerelease = false,
+    draft = false,
+  }: CreateReleaseOptions): Promise<FunctionResult<CreateReleaseResult>> {
     let error: OrbitItError | undefined;
     let data: CreateReleaseResult | undefined;
 
@@ -167,6 +159,7 @@ export class GitHubClient {
         name: releaseName,
         body,
         prerelease,
+        draft,
       });
 
       data = response.data;

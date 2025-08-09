@@ -15,6 +15,19 @@ export type GetRepoInfoResult =
   | null;
 
 /**
+ * @description The options for creating a release.
+ */
+export type CreateReleaseOptions = {
+  owner: string;
+  repo: string;
+  tagName: string;
+  releaseName: string;
+  body: string;
+  prerelease?: boolean;
+  draft?: boolean;
+};
+
+/**
  * @description The result of creating a release.
  */
 export type CreateReleaseResult =
