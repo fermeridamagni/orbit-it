@@ -16,8 +16,8 @@ import type {
   GetCommitFilesResult,
   GetCommitOptions,
   GetCommitsResult,
-  GetOwnerAndRepoResult,
   GetRemoteUrlResult,
+  GetRepoInfoResult,
   GetStatusResult,
   GetTagsResult,
   HasChangesResult,
@@ -279,14 +279,14 @@ class GitClient {
   }
   // #endregion - @getCommitFiles
 
-  // #region - @getOwnerAndRepo
+  // #region - @getRepoInfo
   /**
    * @description Retrieves the owner and repository name from the remote URL.
    * @returns A promise that resolves to an object containing the owner and repository name or null if not found.
    */
-  async getOwnerAndRepo(): Promise<FunctionResult<GetOwnerAndRepoResult>> {
+  async getRepoInfo(): Promise<FunctionResult<GetRepoInfoResult>> {
     let error: OrbitItError | undefined;
-    let data: GetOwnerAndRepoResult | undefined;
+    let data: GetRepoInfoResult | undefined;
 
     try {
       const remoteUrl = await this.getRemoteUrl();
@@ -334,7 +334,7 @@ class GitClient {
       data,
     };
   }
-  // #endregion - @getOwnerAndRepo
+  // #endregion - @getRepoInfo
 
   // #region - @hasChanges
   /**

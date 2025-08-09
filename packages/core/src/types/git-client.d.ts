@@ -68,7 +68,7 @@ export type GetCommitFilesResult = string[] | null;
 /**
  * @description The result of getting the owner and repository name from a remote URL.
  */
-export type GetOwnerAndRepoResult = {
+export type GetRepoInfoResult = {
   owner: string;
   repo: string;
 } | null;
