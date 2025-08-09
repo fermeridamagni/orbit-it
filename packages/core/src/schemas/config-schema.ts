@@ -4,6 +4,7 @@ export const configSchema = z.object({
   $schema: z
     .string()
     .default('node_modules/orbit-it/assets/schema.json')
+    .optional()
     .describe('The path to the Orbit It schema file'),
   project: z
     .object({
@@ -12,7 +13,8 @@ export const configSchema = z.object({
         .describe('The type of project to manage'),
       packageManager: z
         .enum(['npm', 'yarn', 'pnpm'])
-        .default('pnpm')
+        .default('npm')
+        .optional()
         .describe('The package manager used in the project'),
       environment: z
         .enum(['nodejs', 'python', 'unknown'])
@@ -21,6 +23,7 @@ export const configSchema = z.object({
       workspaces: z
         .array(z.string())
         .default(['packages/*', 'apps/*'])
+        .optional()
         .describe('The workspaces in the project'),
     })
     .describe('Project configuration'),
