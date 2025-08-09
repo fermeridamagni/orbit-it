@@ -3,6 +3,7 @@ import type {
   DefaultLogFields,
   ListLogLine,
   StatusResult,
+  TagResult,
 } from 'simple-git';
 
 /**
@@ -46,9 +47,23 @@ export type GetRemoteUrlResult = string | null;
 export type GetStatusResult = StatusResult | null;
 
 /**
+ * @description The options for getting commits.
+ */
+export type GetCommitOptions =
+  | {
+      from?: string;
+    }
+  | undefined;
+
+/**
  * @description The result of getting commits.
  */
 export type GetCommitsResult = Commit[] | null;
+
+/**
+ * @description The result of getting the files changed in a commit.
+ */
+export type GetCommitFilesResult = string[] | null;
 
 /**
  * @description The result of getting the owner and repository name from a remote URL.
@@ -82,6 +97,11 @@ export type CommitChangesOptions = {
  * @description The result of committing changes.
  */
 export type CommitChangesResult = CommitResult | null;
+
+/**
+ * @description The result of getting tags.
+ */
+export type GetTagsResult = TagResult | null;
 
 /**
  * @description The options for creating a tag.

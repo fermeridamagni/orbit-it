@@ -13,10 +13,13 @@ import type {
   CreateTagOptions,
   CurrentBranchResult,
   GetChangesResult,
+  GetCommitFilesResult,
+  GetCommitOptions,
   GetCommitsResult,
   GetOwnerAndRepoResult,
   GetRemoteUrlResult,
   GetStatusResult,
+  GetTagsResult,
   HasChangesResult,
   IsRepoResult,
 } from '@/types/git-client';
@@ -24,7 +27,7 @@ import type {
 const remoteUrlRegex = /github\.com[:/](.+)\/(.+)(\.git)?$/; // Adjusted regex to match both HTTPS and SSH formats -> https://github.com/owner/repo.git
 const removeGitFromUrlRegex = /\.git$/; // Regex to remove .git from the end of the URL
 
-export class GitClient {
+class GitClient {
   private client: SimpleGit;
 
   constructor() {
@@ -187,12 +190,16 @@ export class GitClient {
    * @description Retrieves the commit history of the git repository.
    * @returns A promise that resolves to an array of commits or null if no commits are found.
    */
-  async getCommits(): Promise<FunctionResult<GetCommitsResult>> {
+  async getCommits(
+    options?: GetCommitOptions
+  ): Promise<FunctionResult<GetCommitsResult>> {
     let error: OrbitItError | undefined;
     let data: GetCommitsResult | undefined;
 
     try {
-      const log = await this.client.log();
+      const log = await this.client.log({
+        from: options.from,
+      });
 
       if (!log.all || log.all.length === 0) {
         throw new OrbitItError({
@@ -226,6 +233,51 @@ export class GitClient {
     };
   }
   // #endregion - @getCommits
+
+  // #region - @getCommitFiles
+  /**
+   * @description Gets the list of files changed in a specific commit.
+   * @param commitHash The hash of the commit.
+   * @returns A promise that resolves to an array of file paths changed in the commit.
+   */
+  async getCommitFiles(
+    commitHash: string
+  ): Promise<FunctionResult<GetCommitFilesResult>> {
+    let error: OrbitItError | undefined;
+    let data: string[] | null = null;
+
+    try {
+      // Get the files changed in this commit using git show
+      const filesOutput = await this.client.raw([
+        'show',
+        '--pretty=format:',
+        '--name-only',
+        commitHash,
+      ]);
+
+      const files = filesOutput
+        .split('\n')
+        .filter((line) => line.trim() !== '')
+        .map((file) => file.trim());
+
+      data = files;
+    } catch (foundError) {
+      if (foundError instanceof OrbitItError) {
+        error = foundError;
+      } else if (foundError instanceof Error) {
+        error = new OrbitItError({
+          message: foundError.message,
+          content: [{ message: 'Failed to get owner and repository name.' }],
+        });
+      }
+    }
+
+    return {
+      error,
+      data,
+    };
+  }
+  // #endregion - @getCommitFiles
 
   // #region - @getOwnerAndRepo
   /**
@@ -497,6 +549,48 @@ export class GitClient {
   }
   // #endregion - @pushChanges
 
+  // #region - @getTags
+  /**
+   * @description Retrieves the tags in the git repository.
+   * @returns A promise that resolves to an array of tags or null if no tags are found.
+   */
+  async getTags(): Promise<FunctionResult<GetTagsResult>> {
+    let error: OrbitItError | undefined;
+    let data: GetTagsResult | undefined;
+
+    try {
+      const tags = await this.client.tags();
+
+      if (!tags || tags.all.length === 0) {
+        throw new OrbitItError({
+          message: 'No tags found',
+          content: [
+            {
+              message: 'Please create some tags in the repository.',
+            },
+          ],
+        });
+      }
+
+      data = tags;
+    } catch (foundError) {
+      if (foundError instanceof OrbitItError) {
+        error = foundError;
+      } else if (foundError instanceof Error) {
+        error = new OrbitItError({
+          message: foundError.message,
+          content: [{ message: 'Failed to get tags.' }],
+        });
+      }
+    }
+
+    return {
+      error,
+      data,
+    };
+  }
+  // #endregion - @getTags
+
   // #region - @createTag
   /**
    * @description Creates a tag in the git repository.
@@ -559,6 +653,62 @@ export class GitClient {
   }
   // #endregion - @pushTags
 
+  // #region - @createBranch
+  /**
+   * @description Creates and checks out a new branch.
+   * @param branchName The name of the branch to create.
+   * @returns A promise that resolves to a FunctionResult indicating success or failure.
+   */
+  async createBranch(branchName: string): Promise<FunctionResult> {
+    let error: OrbitItError | undefined;
+
+    try {
+      await this.client.checkoutLocalBranch(branchName);
+    } catch (foundError) {
+      if (foundError instanceof OrbitItError) {
+        error = foundError;
+      } else if (foundError instanceof Error) {
+        error = new OrbitItError({
+          message: foundError.message,
+          content: [{ message: 'Failed to push tags to remote repository.' }],
+        });
+      }
+    }
+
+    return {
+      error,
+    };
+  }
+  // #endregion - @createBranch
+
+  // #region - @pushBranch
+  /**
+   * @description Pushes a branch to the remote repository.
+   * @param branchName The name of the branch to push.
+   * @returns {FunctionResultPromise} A promise that resolves to a FunctionResult indicating success or failure.
+   */
+  async pushBranch(branchName: string): Promise<FunctionResult> {
+    let error: OrbitItError | undefined;
+
+    try {
+      await this.client.push('origin', branchName);
+    } catch (foundError) {
+      if (foundError instanceof OrbitItError) {
+        error = foundError;
+      } else if (foundError instanceof Error) {
+        error = new OrbitItError({
+          message: foundError.message,
+          content: [{ message: 'Failed to push branch to remote repository.' }],
+        });
+      }
+    }
+
+    return {
+      error,
+    };
+  }
+  // #endregion - @pushBranch
+
   // #region - @constructCommitMessage
   /**
    * @description Constructs a commit message based on the provided type, scope, message, and body.
@@ -592,3 +742,5 @@ export class GitClient {
   };
   // #endregion - @constructCommitMessage
 }
+
+export default GitClient;
