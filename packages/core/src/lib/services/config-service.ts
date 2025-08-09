@@ -10,6 +10,8 @@ export interface Config extends z.infer<typeof configSchema> {}
 
 const configFileName = 'orbit-it';
 
+const exts = ['json', 'jsonc'];
+
 class ConfigService {
   private config: Config | undefined = undefined;
 
@@ -62,8 +64,6 @@ class ConfigService {
     let data: Config | undefined;
 
     try {
-      const exts = ['json', 'jsonc'];
-
       const entries = await fg(`./**/${configFileName}.{${exts.join(',')}}`, {
         cwd: process.cwd(),
         absolute: true,
