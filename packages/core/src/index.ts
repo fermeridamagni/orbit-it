@@ -1,5 +1,8 @@
 import ConfigService from '@services/config-service';
 import EnvService from '@services/env-service';
+import ReleaseService, {
+  type ReleaseServiceOptions,
+} from '@services/release-service';
 
 export class OrbitIt {
   config: ConfigService;
@@ -8,6 +11,10 @@ export class OrbitIt {
   constructor() {
     this.config = new ConfigService();
     this.env = new EnvService();
+  }
+
+  createReleaseService(options: ReleaseServiceOptions): ReleaseService {
+    return new ReleaseService(options);
   }
 }
 
