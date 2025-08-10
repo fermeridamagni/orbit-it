@@ -19,4 +19,5 @@ export class OrbitIt {
 }
 
 export type { Config } from '@services/config-service';
+export type { ReleaseType } from '@services/release-service';
 export { OrbitItError, type OrbitItErrorOptions } from '@utils/errors';
