@@ -1,4 +1,4 @@
-import { cancel } from '@clack/prompts';
+import { log } from '@clack/prompts';
 import type { OrbitItErrorOptions } from '@orbit-it/core';
 import { errorMessage } from '@utils/banners';
 import colors from 'picocolors';
@@ -45,6 +45,6 @@ export function onProcessCancel({
  * @param message - Optional message to display on cancellation.
  */
 export function onCommandFlowCancel(message?: string): never {
-  cancel(message || 'Command flow cancelled by user.');
-  process.exit(0); // Exit the process gracefully
+  log.error(message || 'Command flow cancelled.');
+  process.exit(1); // Exit the process with an error code
 }

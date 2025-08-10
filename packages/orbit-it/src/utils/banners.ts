@@ -11,7 +11,9 @@ export const banner = `
 export const descriptionMessage =
   '🚀 Orbit It - Manage Your Repositories and Monorepos on GitHub';
 
-export const dryRunEnabledMessage = `Dry run mode ${blue('enabled')}.`;
+export const dryRunEnabledMessage = `Dry run mode ${blue('enabled')}. No changes will be made.`;
+
+export const ciModeMessage = `CI mode ${blue('enabled')}. Skipping interactive prompts.`;
 
 export const successMessage = '🚀 Orbit It. All done!';
 
