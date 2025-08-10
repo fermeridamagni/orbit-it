@@ -8,6 +8,13 @@ export const configSchema = z.object({
     .describe('The path to the Orbit It schema file'),
   project: z
     .object({
+      version: z
+        .string()
+        .default('0.0.0')
+        .optional()
+        .describe(
+          'The version of the project if it is a monorepo and the versioning strategy is fixed'
+        ),
       type: z
         .enum(['monorepo', 'single-package'])
         .describe('The type of project to manage'),
