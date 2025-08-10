@@ -115,46 +115,54 @@ function releaseCommand(program: Command): Command {
           },
         });
 
-        const userConfig = await group({
-          continue: async () =>
-            await confirm({
-              message: 'Do you want to continue?',
-              initialValue: true,
-            }),
+        const userConfig = await group(
+          {
+            continue: async () =>
+              await confirm({
+                message: 'Do you want to continue?',
+                initialValue: true,
+              }),
 
-          type: async () =>
-            await select({
-              message: 'Select the release type',
-              options: [
-                {
-                  label: 'Major',
-                  value: 'major',
-                },
-                {
-                  label: 'Minor',
-                  value: 'minor',
-                },
-                {
-                  label: 'Patch',
-                  value: 'patch',
-                },
-                {
-                  label: 'Prerelease',
-                  value: 'prerelease',
-                },
-              ],
-            }),
-          dryRun: async () =>
-            await confirm({
-              message: 'Do you want to run in dry run mode?',
-              initialValue: false,
-            }),
-          draft: async () =>
-            await confirm({
-              message: 'Do you want to create a draft release?',
-              initialValue: false,
-            }),
-        });
+            type: async () =>
+              await select({
+                message: 'Select the release type',
+                options: [
+                  {
+                    label: 'Major',
+                    value: 'major',
+                  },
+                  {
+                    label: 'Minor',
+                    value: 'minor',
+                  },
+                  {
+                    label: 'Patch',
+                    value: 'patch',
+                  },
+                  {
+                    label: 'Prerelease',
+                    value: 'prerelease',
+                  },
+                ],
+                maxItems: 1,
+              }),
+            dryRun: async () =>
+              await confirm({
+                message: 'Do you want to run in dry run mode?',
+                initialValue: false,
+              }),
+            draft: async () =>
+              await confirm({
+                message: 'Do you want to create a draft release?',
+                initialValue: false,
+              }),
+          },
+          {
+            onCancel: () => {
+              onCommandFlowCancel('Initialization cancelled by user.');
+            },
+          }
+        );
 
         if (!userConfig.continue) {
           cancel('User cancelled the operation');
