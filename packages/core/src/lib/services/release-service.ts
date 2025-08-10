@@ -17,6 +17,7 @@ export type ReleaseType = 'major' | 'minor' | 'patch' | 'prerelease';
 
 export interface ReleaseServiceOptions {
   config: Config;
+  gitClient?: GitClient;
 }
 
 export interface ReleaseOptions {
@@ -43,9 +44,9 @@ class ReleaseService {
   private gitClient: GitClient | null = null;
   private githubClient: GitHubClient | null = null;
 
-  constructor(token: string, { config }: ReleaseServiceOptions) {
+  constructor(token: string, { config, gitClient }: ReleaseServiceOptions) {
     this.config = config;
-    this.gitClient = new GitClient();
+    this.gitClient = gitClient || new GitClient();
     this.githubClient = new GitHubClient(token);
   }
 
