@@ -1,8 +1,6 @@
 import ConfigService from '@services/config-service';
 import EnvService from '@services/env-service';
-import ReleaseService, {
-  type ReleaseServiceOptions,
-} from '@services/release-service';
+import ReleaseService from '@services/release-service';
 
 export class OrbitIt {
   config: ConfigService;
@@ -13,8 +11,16 @@ export class OrbitIt {
     this.env = new EnvService();
   }
 
-  createReleaseService(options: ReleaseServiceOptions): ReleaseService {
-    return new ReleaseService(options);
+  async createReleaseService(token: string): Promise<ReleaseService> {
+    const foundConfig = await this.config.get();
+
+    if (foundConfig.error || !foundConfig.data) {
+      throw foundConfig.error;
+    }
+
+    return new ReleaseService(token, {
+      config: foundConfig.data,
+    });
   }
 }
 

@@ -16,8 +16,7 @@ const commitMessageRegex =
 export type ReleaseType = 'major' | 'minor' | 'patch' | 'prerelease';
 
 export interface ReleaseServiceOptions {
-  token: string;
-  projectConfig: Config;
+  config: Config;
 }
 
 export interface ReleaseOptions {
@@ -44,8 +43,8 @@ class ReleaseService {
   private gitClient: GitClient | null = null;
   private githubClient: GitHubClient | null = null;
 
-  constructor({ token, projectConfig }: ReleaseServiceOptions) {
-    this.config = projectConfig;
+  constructor(token: string, { config }: ReleaseServiceOptions) {
+    this.config = config;
     this.gitClient = new GitClient();
     this.githubClient = new GitHubClient(token);
   }
