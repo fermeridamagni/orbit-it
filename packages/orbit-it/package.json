@@ -40,7 +40,7 @@
   ],
   "scripts": {
     "build": "unbuild",
-    "dev": "unbuild --stub",
+    "build:stub": "unbuild --stub",
     "start": "node ./build/cli.cjs",
     "test": "vitest --run",
     "test:watch": "vitest --watch",

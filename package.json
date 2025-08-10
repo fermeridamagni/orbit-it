@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "build": "turbo run build",
+    "build:stub": "turbo run build:stub",
     "dev": "turbo run dev",
     "format": "pnpm dlx ultracite format",
     "lint": "pnpm dlx ultracite lint"
