@@ -50,9 +50,11 @@
   "dependencies": {
     "@octokit/rest": "^22.0.0",
     "fast-glob": "^3.3.3",
+    "semver": "^7.7.2",
     "simple-git": "^3.28.0"
   },
   "devDependencies": {
+    "@types/semver": "^7.7.0",
     "typescript": "5.9.2",
     "unbuild": "^3.6.0",
     "vitest": "^3.2.4"
