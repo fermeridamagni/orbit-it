@@ -5,7 +5,6 @@
 
 import { OrbitItError } from '@utils/errors';
 import simpleGit, { type SimpleGit } from 'simple-git';
-import type { FunctionResult } from '@/types/functions';
 import type {
   CommitChangesOptions,
   CommitChangesResult,
@@ -39,45 +38,19 @@ class GitClient {
    * @description Checks if the current directory is a git repository.
    * @returns A promise that resolves to an object indicating success or failure.
    */
-  async isRepo(): Promise<FunctionResult<IsRepoResult>> {
-    let error: OrbitItError | undefined;
-    let data: IsRepoResult | undefined;
-
-    try {
-      const isRepo = await this.client.checkIsRepo();
-
-      if (!isRepo) {
-        throw new OrbitItError({
-          message: 'Current directory is not a git repository',
-          content: [
-            {
-              message: 'Please make sure you are in a git repository.',
-            },
-          ],
-        });
-      }
-
-      data = true;
-    } catch (foundError) {
-      if (foundError instanceof OrbitItError) {
-        error = foundError;
-      } else if (foundError instanceof Error) {
-        error = new OrbitItError({
-          message: foundError.message,
-          content: [
-            {
-              message:
-                'Failed to check if current directory is a git repository.',
-            },
-          ],
-        });
-      }
+  async isRepo(): Promise<IsRepoResult> {
+    const isRepo = await this.client.checkIsRepo();
+    if (!isRepo) {
+      throw new OrbitItError({
+        message: 'Current directory is not a git repository',
+        content: [
+          {
+            message: 'Please make sure you are in a git repository.',
+          },
+        ],
+      });
     }
-
-    return {
-      error,
-      data,
-    };
+    return true;
   }
   // #endregion - @isRepo
 
@@ -86,29 +59,9 @@ class GitClient {
    * @description Retrieves the current branch name of the git repository.
    * @returns A promise that resolves to the current branch name.
    */
-  async getCurrentBranch(): Promise<FunctionResult<CurrentBranchResult>> {
-    let error: OrbitItError | undefined;
-    let data: CurrentBranchResult | undefined;
-
-    try {
-      const branchSummary = await this.client.branch();
-
-      data = branchSummary.current;
-    } catch (foundError) {
-      if (foundError instanceof OrbitItError) {
-        error = foundError;
-      } else if (foundError instanceof Error) {
-        error = new OrbitItError({
-          message: foundError.message,
-          content: [{ message: 'Failed to get current branch.' }],
-        });
-      }
-    }
-
-    return {
-      error,
-      data,
-    };
+  async getCurrentBranch(): Promise<CurrentBranchResult> {
+    const branchSummary = await this.client.branch();
+    return branchSummary.current;
   }
   // #endregion - @getCurrentBranch
 
@@ -117,40 +70,19 @@ class GitClient {
    * @description Retrieves the remote URL of the git repository.
    * @returns A promise that resolves to the remote URL or null if not found.
    */
-  async getRemoteUrl(): Promise<FunctionResult<GetRemoteUrlResult>> {
-    let error: OrbitItError | undefined;
-    let data: GetRemoteUrlResult | undefined;
-
-    try {
-      const remotes = await this.client.getRemotes(true);
-
-      if (remotes.length === 0) {
-        throw new OrbitItError({
-          message: 'No remotes found',
-          content: [
-            {
-              message: 'Please add a remote to your git repository.',
-            },
-          ],
-        });
-      }
-
-      data = remotes[0].refs.fetch; // Return the fetch URL of the first remote
-    } catch (foundError) {
-      if (foundError instanceof OrbitItError) {
-        error = foundError;
-      } else if (foundError instanceof Error) {
-        error = new OrbitItError({
-          message: foundError.message,
-          content: [{ message: 'Failed to get remote URL.' }],
-        });
-      }
+  async getRemoteUrl(): Promise<GetRemoteUrlResult> {
+    const remotes = await this.client.getRemotes(true);
+    if (remotes.length === 0) {
+      throw new OrbitItError({
+        message: 'No remotes found',
+        content: [
+          {
+            message: 'Please add a remote to your git repository.',
+          },
+        ],
+      });
     }
-
-    return {
-      error,
-      data,
-    };
+    return remotes[0].refs.fetch;
   }
   // #endregion - @getRemoteUrl
 
@@ -159,29 +91,8 @@ class GitClient {
    * @description Retrieves the status of the git repository, including staged, unstaged, and untracked files.
    * @returns A promise that resolves to the status of the repository.
    */
-  async getStatus(): Promise<FunctionResult<GetStatusResult>> {
-    let error: OrbitItError | undefined;
-    let data: GetStatusResult | undefined;
-
-    try {
-      const status = await this.client.status();
-
-      data = status;
-    } catch (foundError) {
-      if (foundError instanceof OrbitItError) {
-        error = foundError;
-      } else if (foundError instanceof Error) {
-        error = new OrbitItError({
-          message: foundError.message,
-          content: [{ message: 'Failed to get repository status.' }],
-        });
-      }
-    }
-
-    return {
-      error,
-      data,
-    };
+  async getStatus(): Promise<GetStatusResult> {
+    return await this.client.status();
   }
   // #endregion - @getStatus
 
@@ -190,47 +101,24 @@ class GitClient {
    * @description Retrieves the commit history of the git repository.
    * @returns A promise that resolves to an array of commits or null if no commits are found.
    */
-  async getCommits(
-    options?: GetCommitOptions
-  ): Promise<FunctionResult<GetCommitsResult>> {
-    let error: OrbitItError | undefined;
-    let data: GetCommitsResult | undefined;
-
-    try {
-      const log = await this.client.log({
-        from: options.from,
+  async getCommits(options?: GetCommitOptions): Promise<GetCommitsResult> {
+    const log = await this.client.log({
+      from: options?.from,
+    });
+    if (!log.all || log.all.length === 0) {
+      throw new OrbitItError({
+        message: 'No commits found',
+        content: [
+          {
+            message: 'Please make some commits to the repository.',
+          },
+        ],
       });
-
-      if (!log.all || log.all.length === 0) {
-        throw new OrbitItError({
-          message: 'No commits found',
-          content: [
-            {
-              message: 'Please make some commits to the repository.',
-            },
-          ],
-        });
-      }
-
-      data = log.all.map((commit) => ({
-        ...commit,
-        message: commit.message,
-      }));
-    } catch (foundError) {
-      if (foundError instanceof OrbitItError) {
-        error = foundError;
-      } else if (foundError instanceof Error) {
-        error = new OrbitItError({
-          message: foundError.message,
-          content: [{ message: 'Failed to get commits.' }],
-        });
-      }
     }
-
-    return {
-      error,
-      data,
-    };
+    return log.all.map((commit) => ({
+      ...commit,
+      message: commit.message,
+    }));
   }
   // #endregion - @getCommits
 
@@ -240,42 +128,17 @@ class GitClient {
    * @param commitHash The hash of the commit.
    * @returns A promise that resolves to an array of file paths changed in the commit.
    */
-  async getCommitFiles(
-    commitHash: string
-  ): Promise<FunctionResult<GetCommitFilesResult>> {
-    let error: OrbitItError | undefined;
-    let data: string[] | null = null;
-
-    try {
-      // Get the files changed in this commit using git show
-      const filesOutput = await this.client.raw([
-        'show',
-        '--pretty=format:',
-        '--name-only',
-        commitHash,
-      ]);
-
-      const files = filesOutput
-        .split('\n')
-        .filter((line) => line.trim() !== '')
-        .map((file) => file.trim());
-
-      data = files;
-    } catch (foundError) {
-      if (foundError instanceof OrbitItError) {
-        error = foundError;
-      } else if (foundError instanceof Error) {
-        error = new OrbitItError({
-          message: foundError.message,
-          content: [{ message: 'Failed to get owner and repository name.' }],
-        });
-      }
-    }
-
-    return {
-      error,
-      data,
-    };
+  async getCommitFiles(commitHash: string): Promise<GetCommitFilesResult> {
+    const filesOutput = await this.client.raw([
+      'show',
+      '--pretty=format:',
+      '--name-only',
+      commitHash,
+    ]);
+    return filesOutput
+      .split('\n')
+      .filter((line) => line.trim() !== '')
+      .map((file) => file.trim());
   }
   // #endregion - @getCommitFiles
 
@@ -284,54 +147,23 @@ class GitClient {
    * @description Retrieves the owner and repository name from the remote URL.
    * @returns A promise that resolves to an object containing the owner and repository name or null if not found.
    */
-  async getRepoInfo(): Promise<FunctionResult<GetRepoInfoResult>> {
-    let error: OrbitItError | undefined;
-    let data: GetRepoInfoResult | undefined;
-
-    try {
-      const remoteUrl = await this.getRemoteUrl();
-
-      if (remoteUrl.error || !remoteUrl.data) {
-        throw new OrbitItError({
-          message: remoteUrl.error?.message || 'Failed to get remote URL',
-          content: remoteUrl.error?.content || [
-            { message: 'Unable to retrieve remote URL.' },
-          ],
-        });
-      }
-
-      const match = remoteUrl.data.match(remoteUrlRegex);
-
-      if (!match) {
-        throw new OrbitItError({
-          message: 'Invalid remote URL format',
-          content: [
-            {
-              message:
-                'The remote URL does not match the expected GitHub format.',
-            },
-          ],
-        });
-      }
-
-      data = {
-        owner: match[1],
-        repo: match[2].replace(removeGitFromUrlRegex, ''), // Remove .git if present
-      };
-    } catch (foundError) {
-      if (foundError instanceof OrbitItError) {
-        error = foundError;
-      } else if (foundError instanceof Error) {
-        error = new OrbitItError({
-          message: foundError.message,
-          content: [{ message: 'Failed to get owner and repository name.' }],
-        });
-      }
+  async getRepoInfo(): Promise<GetRepoInfoResult> {
+    const remoteUrl = await this.getRemoteUrl();
+    const match = remoteUrl.match(remoteUrlRegex);
+    if (!match) {
+      throw new OrbitItError({
+        message: 'Invalid remote URL format',
+        content: [
+          {
+            message:
+              'The remote URL does not match the expected GitHub format.',
+          },
+        ],
+      });
     }
-
     return {
-      error,
-      data,
+      owner: match[1],
+      repo: match[2].replace(removeGitFromUrlRegex, ''),
     };
   }
   // #endregion - @getRepoInfo
@@ -341,52 +173,20 @@ class GitClient {
    * @description Checks if there are any changes in the git repository.
    * @returns A promise that resolves to a boolean indicating if there are changes.
    */
-  async hasChanges(): Promise<FunctionResult<HasChangesResult>> {
-    let error: OrbitItError | undefined;
-    let data: HasChangesResult | undefined;
-
-    try {
-      const status = await this.getStatus();
-
-      if (status.error || !status.data) {
-        throw new OrbitItError({
-          message: status.error?.message || 'Failed to retrieve status',
-          content: status.error?.content || [
-            { message: 'Unable to retrieve repository status.' },
-          ],
-        });
-      }
-
-      const hasChanges: boolean =
-        status.data.files.length > 0 || status.data.not_added.length > 0;
-
-      if (!hasChanges) {
-        throw new OrbitItError({
-          message: 'There are no changes in the repository',
-          content: [
-            {
-              message: 'Make some changes to files before committing.',
-            },
-          ],
-        });
-      }
-
-      data = true;
-    } catch (foundError) {
-      if (foundError instanceof OrbitItError) {
-        error = foundError;
-      } else if (foundError instanceof Error) {
-        error = new OrbitItError({
-          message: foundError.message,
-          content: [{ message: 'Failed to check for changes.' }],
-        });
-      }
+  async hasChanges(): Promise<HasChangesResult> {
+    const status = await this.getStatus();
+    const hasChanges = status.files.length > 0 || status.not_added.length > 0;
+    if (!hasChanges) {
+      throw new OrbitItError({
+        message: 'There are no changes in the repository',
+        content: [
+          {
+            message: 'Make some changes to files before committing.',
+          },
+        ],
+      });
     }
-
-    return {
-      error,
-      data,
-    };
+    return true;
   }
   // #endregion - @hasChanges
 
@@ -395,38 +195,8 @@ class GitClient {
    * @description Retrieves the changes in the git repository.
    * @returns A promise that resolves to the status of the repository or null if no changes are found.
    */
-  async getChanges(): Promise<FunctionResult<GetChangesResult>> {
-    let error: OrbitItError | undefined;
-    let data: GetChangesResult | undefined;
-
-    try {
-      const status = await this.getStatus();
-
-      if (status.error || !status.data) {
-        throw new OrbitItError({
-          message: status.error?.message || 'Failed to retrieve status',
-          content: status.error?.content || [
-            { message: 'Unable to retrieve repository status.' },
-          ],
-        });
-      }
-
-      data = status.data;
-    } catch (foundError) {
-      if (foundError instanceof OrbitItError) {
-        error = foundError;
-      } else if (foundError instanceof Error) {
-        error = new OrbitItError({
-          message: foundError.message,
-          content: [{ message: 'Failed to get changes.' }],
-        });
-      }
-    }
-
-    return {
-      error,
-      data,
-    };
+  async getChanges(): Promise<GetChangesResult> {
+    return await this.getStatus();
   }
   // #endregion - @getChanges
 
@@ -436,25 +206,8 @@ class GitClient {
    * @param files An array of file paths to add to the staging area.
    * @returns A promise that resolves to a FunctionResult indicating success or failure.
    */
-  async addFiles(files: string[]): Promise<FunctionResult> {
-    let error: OrbitItError | undefined;
-
-    try {
-      await this.client.add(files);
-    } catch (foundError) {
-      if (foundError instanceof OrbitItError) {
-        error = foundError;
-      } else if (foundError instanceof Error) {
-        error = new OrbitItError({
-          message: foundError.message,
-          content: [{ message: 'Failed to add files to staging area.' }],
-        });
-      }
-    }
-
-    return {
-      error,
-    };
+  async addFiles(files: string[]): Promise<void> {
+    await this.client.add(files);
   }
   // #endregion - @addFiles
 
@@ -469,54 +222,31 @@ class GitClient {
    */
   async commitChanges(
     options: CommitChangesOptions
-  ): Promise<FunctionResult<CommitChangesResult>> {
-    let error: OrbitItError | undefined;
-    let data: CommitChangesResult | undefined;
-
+  ): Promise<CommitChangesResult> {
     const {
       type: commitType,
       message: commitMessage,
       body: commitBody,
       scope: commitScope,
     } = options;
-
-    try {
-      const constructedMessage = this.constructCommitMessage({
-        type: commitType,
-        scope: commitScope,
-        message: commitMessage,
-        body: commitBody,
+    const constructedMessage = this.constructCommitMessage({
+      type: commitType,
+      scope: commitScope,
+      message: commitMessage,
+      body: commitBody,
+    });
+    const commit = await this.client.commit(constructedMessage);
+    if (!commit.commit) {
+      throw new OrbitItError({
+        message: 'Commit failed or no commit data returned',
+        content: [
+          {
+            message: 'Please check your git configuration and try again.',
+          },
+        ],
       });
-
-      const commit = await this.client.commit(constructedMessage);
-
-      if (!commit.commit) {
-        throw new OrbitItError({
-          message: 'Commit failed or no commit data returned',
-          content: [
-            {
-              message: 'Please check your git configuration and try again.',
-            },
-          ],
-        });
-      }
-
-      data = commit;
-    } catch (foundError) {
-      if (foundError instanceof OrbitItError) {
-        error = foundError;
-      } else if (foundError instanceof Error) {
-        error = new OrbitItError({
-          message: foundError.message,
-          content: [{ message: 'Failed to commit changes.' }],
-        });
-      }
     }
-
-    return {
-      error,
-      data,
-    };
+    return commit;
   }
   // #endregion - @commitChanges
 
@@ -525,27 +255,8 @@ class GitClient {
    * @description Pushes the committed changes to the remote repository.
    * @returns A promise that resolves to a FunctionResult indicating success or failure.
    */
-  async pushChanges(): Promise<FunctionResult> {
-    let error: OrbitItError | undefined;
-
-    try {
-      await this.client.push();
-    } catch (foundError) {
-      if (foundError instanceof OrbitItError) {
-        error = foundError;
-      } else if (foundError instanceof Error) {
-        error = new OrbitItError({
-          message: foundError.message,
-          content: [
-            { message: 'Failed to push changes to remote repository.' },
-          ],
-        });
-      }
-    }
-
-    return {
-      error,
-    };
+  async pushChanges(): Promise<void> {
+    await this.client.push();
   }
   // #endregion - @pushChanges
 
@@ -554,40 +265,9 @@ class GitClient {
    * @description Retrieves the tags in the git repository.
    * @returns A promise that resolves to an array of tags or null if no tags are found.
    */
-  async getTags(): Promise<FunctionResult<GetTagsResult>> {
-    let error: OrbitItError | undefined;
-    let data: GetTagsResult | undefined;
-
-    try {
-      const tags = await this.client.tags();
-
-      if (!tags || tags.all.length === 0) {
-        throw new OrbitItError({
-          message: 'No tags found',
-          content: [
-            {
-              message: 'Please create some tags in the repository.',
-            },
-          ],
-        });
-      }
-
-      data = tags;
-    } catch (foundError) {
-      if (foundError instanceof OrbitItError) {
-        error = foundError;
-      } else if (foundError instanceof Error) {
-        error = new OrbitItError({
-          message: foundError.message,
-          content: [{ message: 'Failed to get tags.' }],
-        });
-      }
-    }
-
-    return {
-      error,
-      data,
-    };
+  async getTags(): Promise<GetTagsResult> {
+    // Return whatever simple-git returns; empty tag list is valid (first release scenario)
+    return await this.client.tags();
   }
   // #endregion - @getTags
 
@@ -598,31 +278,13 @@ class GitClient {
    * @param message The message associated with the tag (optional).
    * @returns A promise that resolves to a FunctionResult indicating success or failure.
    */
-  async createTag(options: CreateTagOptions): Promise<FunctionResult> {
-    let error: OrbitItError | undefined;
-
+  async createTag(options: CreateTagOptions): Promise<void> {
     const { tagName, tagMessage } = options;
-
-    try {
-      if (tagMessage) {
-        await this.client.addAnnotatedTag(tagName, tagMessage);
-      } else {
-        await this.client.addTag(tagName);
-      }
-    } catch (foundError) {
-      if (foundError instanceof OrbitItError) {
-        error = foundError;
-      } else if (foundError instanceof Error) {
-        error = new OrbitItError({
-          message: foundError.message,
-          content: [{ message: 'Failed to create tag.' }],
-        });
-      }
+    if (tagMessage) {
+      await this.client.addAnnotatedTag(tagName, tagMessage);
+    } else {
+      await this.client.addTag(tagName);
     }
-
-    return {
-      error,
-    };
   }
   // #endregion - @createTag
 
@@ -631,25 +293,8 @@ class GitClient {
    * @description Pushes tags to the remote repository.
    * @returns A promise that resolves to a FunctionResult indicating success or failure.
    */
-  async pushTags(): Promise<FunctionResult> {
-    let error: OrbitItError | undefined;
-
-    try {
-      await this.client.pushTags();
-    } catch (foundError) {
-      if (foundError instanceof OrbitItError) {
-        error = foundError;
-      } else if (foundError instanceof Error) {
-        error = new OrbitItError({
-          message: foundError.message,
-          content: [{ message: 'Failed to push tags to remote repository.' }],
-        });
-      }
-    }
-
-    return {
-      error,
-    };
+  async pushTags(): Promise<void> {
+    await this.client.pushTags();
   }
   // #endregion - @pushTags
 
@@ -659,25 +304,8 @@ class GitClient {
    * @param branchName The name of the branch to create.
    * @returns A promise that resolves to a FunctionResult indicating success or failure.
    */
-  async createBranch(branchName: string): Promise<FunctionResult> {
-    let error: OrbitItError | undefined;
-
-    try {
-      await this.client.checkoutLocalBranch(branchName);
-    } catch (foundError) {
-      if (foundError instanceof OrbitItError) {
-        error = foundError;
-      } else if (foundError instanceof Error) {
-        error = new OrbitItError({
-          message: foundError.message,
-          content: [{ message: 'Failed to push tags to remote repository.' }],
-        });
-      }
-    }
-
-    return {
-      error,
-    };
+  async createBranch(branchName: string): Promise<void> {
+    await this.client.checkoutLocalBranch(branchName);
   }
   // #endregion - @createBranch
 
@@ -687,25 +315,8 @@ class GitClient {
    * @param branchName The name of the branch to push.
    * @returns {FunctionResultPromise} A promise that resolves to a FunctionResult indicating success or failure.
    */
-  async pushBranch(branchName: string): Promise<FunctionResult> {
-    let error: OrbitItError | undefined;
-
-    try {
-      await this.client.push('origin', branchName);
-    } catch (foundError) {
-      if (foundError instanceof OrbitItError) {
-        error = foundError;
-      } else if (foundError instanceof Error) {
-        error = new OrbitItError({
-          message: foundError.message,
-          content: [{ message: 'Failed to push branch to remote repository.' }],
-        });
-      }
-    }
-
-    return {
-      error,
-    };
+  async pushBranch(branchName: string): Promise<void> {
+    await this.client.push('origin', branchName);
   }
   // #endregion - @pushBranch
 

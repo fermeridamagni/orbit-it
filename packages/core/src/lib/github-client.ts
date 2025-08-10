@@ -6,7 +6,6 @@
 
 import { Octokit } from '@octokit/rest';
 import { OrbitItError } from '@utils/errors';
-import type { FunctionResult } from '@/types/functions';
 import type {
   CheckRepoExistsResult,
   CreateReleaseOptions,
@@ -38,40 +37,19 @@ export class GitHubClient {
    * @description Retrieves the authenticated user's information.
    * @returns A promise that resolves to the user's information.
    */
-  async getUserInfo(): Promise<FunctionResult<GetUserInfoResult>> {
-    let error: OrbitItError | undefined;
-    let data: GetUserInfoResult | undefined;
-
-    try {
-      if (!this.client) {
-        throw new OrbitItError({
-          message: 'GitHub client is not initialized',
-          content: [
-            {
-              message: 'Please ensure a valid GITHUB_TOKEN is provided.',
-            },
-          ],
-        });
-      }
-
-      const response = await this.client.users.getAuthenticated();
-
-      data = response.data;
-    } catch (foundError) {
-      if (foundError instanceof OrbitItError) {
-        error = foundError;
-      } else if (foundError instanceof Error) {
-        error = new OrbitItError({
-          message: foundError.message,
-          content: [{ message: 'Failed to retrieve user information.' }],
-        });
-      }
+  async getUserInfo(): Promise<GetUserInfoResult> {
+    if (!this.client) {
+      throw new OrbitItError({
+        message: 'GitHub client is not initialized',
+        content: [
+          {
+            message: 'Please ensure a valid GITHUB_TOKEN is provided.',
+          },
+        ],
+      });
     }
-
-    return {
-      error,
-      data,
-    };
+    const response = await this.client.users.getAuthenticated();
+    return response.data;
   }
   // #endregion - @getUserInfo
 
@@ -82,43 +60,19 @@ export class GitHubClient {
    * @param repo - The name of the repository.
    * @returns A promise that resolves to the repository information.
    */
-  async getRepoInfo(
-    owner: string,
-    repo: string
-  ): Promise<FunctionResult<GetRepoInfoResult>> {
-    let error: OrbitItError | undefined;
-    let data: GetRepoInfoResult | undefined;
-
-    try {
-      if (!this.client) {
-        throw new OrbitItError({
-          message: 'GitHub client is not initialized',
-          content: [
-            {
-              message: 'Please ensure a valid GITHUB_TOKEN is provided.',
-            },
-          ],
-        });
-      }
-
-      const response = await this.client.repos.get({ owner, repo });
-
-      data = response.data;
-    } catch (foundError) {
-      if (foundError instanceof OrbitItError) {
-        error = foundError;
-      } else if (foundError instanceof Error) {
-        error = new OrbitItError({
-          message: foundError.message,
-          content: [{ message: 'Failed to retrieve repository information.' }],
-        });
-      }
+  async getRepoInfo(owner: string, repo: string): Promise<GetRepoInfoResult> {
+    if (!this.client) {
+      throw new OrbitItError({
+        message: 'GitHub client is not initialized',
+        content: [
+          {
+            message: 'Please ensure a valid GITHUB_TOKEN is provided.',
+          },
+        ],
+      });
     }
-
-    return {
-      error,
-      data,
-    };
+    const response = await this.client.repos.get({ owner, repo });
+    return response.data;
   }
   // #endregion - @getRepoInfo
   // #region - @createRelease
@@ -136,48 +90,27 @@ export class GitHubClient {
     body,
     prerelease = false,
     draft = false,
-  }: CreateReleaseOptions): Promise<FunctionResult<CreateReleaseResult>> {
-    let error: OrbitItError | undefined;
-    let data: CreateReleaseResult | undefined;
-
-    try {
-      if (!this.client) {
-        throw new OrbitItError({
-          message: 'GitHub client is not initialized',
-          content: [
-            {
-              message: 'Please ensure a valid GITHUB_TOKEN is provided.',
-            },
-          ],
-        });
-      }
-
-      const response = await this.client.repos.createRelease({
-        owner,
-        repo,
-        tag_name: tagName,
-        name: releaseName,
-        body,
-        prerelease,
-        draft,
+  }: CreateReleaseOptions): Promise<CreateReleaseResult> {
+    if (!this.client) {
+      throw new OrbitItError({
+        message: 'GitHub client is not initialized',
+        content: [
+          {
+            message: 'Please ensure a valid GITHUB_TOKEN is provided.',
+          },
+        ],
       });
-
-      data = response.data;
-    } catch (foundError) {
-      if (foundError instanceof OrbitItError) {
-        error = foundError;
-      } else if (foundError instanceof Error) {
-        error = new OrbitItError({
-          message: foundError.message,
-          content: [{ message: 'Failed to create release.' }],
-        });
-      }
     }
-
-    return {
-      error,
-      data,
-    };
+    const response = await this.client.repos.createRelease({
+      owner,
+      repo,
+      tag_name: tagName,
+      name: releaseName,
+      body,
+      prerelease,
+      draft,
+    });
+    return response.data;
   }
   // #endregion - @createRelease
 
@@ -188,46 +121,22 @@ export class GitHubClient {
    * @param repo - The name of the repository.
    * @returns A promise that resolves to the list of releases.
    */
-  async listReleases(
-    owner: string,
-    repo: string
-  ): Promise<FunctionResult<ListReleasesResult>> {
-    let error: OrbitItError | undefined;
-    let data: ListReleasesResult | undefined;
-
-    try {
-      if (!this.client) {
-        throw new OrbitItError({
-          message: 'GitHub client is not initialized',
-          content: [
-            {
-              message: 'Please ensure a valid GITHUB_TOKEN is provided.',
-            },
-          ],
-        });
-      }
-
-      const response = await this.client.repos.listReleases({
-        owner,
-        repo,
+  async listReleases(owner: string, repo: string): Promise<ListReleasesResult> {
+    if (!this.client) {
+      throw new OrbitItError({
+        message: 'GitHub client is not initialized',
+        content: [
+          {
+            message: 'Please ensure a valid GITHUB_TOKEN is provided.',
+          },
+        ],
       });
-
-      data = response.data;
-    } catch (foundError) {
-      if (foundError instanceof OrbitItError) {
-        error = foundError;
-      } else if (foundError instanceof Error) {
-        error = new OrbitItError({
-          message: foundError.message,
-          content: [{ message: 'Failed to list releases.' }],
-        });
-      }
     }
-
-    return {
-      error,
-      data,
-    };
+    const response = await this.client.repos.listReleases({
+      owner,
+      repo,
+    });
+    return response.data;
   }
   // #endregion - @listReleases
 
@@ -243,40 +152,22 @@ export class GitHubClient {
     owner: string,
     repo: string,
     releaseId: number
-  ): Promise<FunctionResult> {
-    let error: OrbitItError | undefined;
-
-    try {
-      if (!this.client) {
-        throw new OrbitItError({
-          message: 'GitHub client is not initialized',
-          content: [
-            {
-              message: 'Please ensure a valid GITHUB_TOKEN is provided.',
-            },
-          ],
-        });
-      }
-
-      await this.client.repos.deleteRelease({
-        owner,
-        repo,
-        release_id: releaseId,
+  ): Promise<void> {
+    if (!this.client) {
+      throw new OrbitItError({
+        message: 'GitHub client is not initialized',
+        content: [
+          {
+            message: 'Please ensure a valid GITHUB_TOKEN is provided.',
+          },
+        ],
       });
-    } catch (foundError) {
-      if (foundError instanceof OrbitItError) {
-        error = foundError;
-      } else if (foundError instanceof Error) {
-        error = new OrbitItError({
-          message: foundError.message,
-          content: [{ message: 'Failed to delete release.' }],
-        });
-      }
     }
-
-    return {
-      error,
-    };
+    await this.client.repos.deleteRelease({
+      owner,
+      repo,
+      release_id: releaseId,
+    });
   }
   // #endregion - @deleteRelease
 
@@ -290,46 +181,26 @@ export class GitHubClient {
   async checkRepoExists(
     owner: string,
     repo: string
-  ): Promise<FunctionResult<CheckRepoExistsResult>> {
-    let error: OrbitItError | undefined;
-    let data: CheckRepoExistsResult | undefined;
-
-    try {
-      if (!this.client) {
-        throw new OrbitItError({
-          message: 'GitHub client is not initialized',
-          content: [
-            {
-              message: 'Please ensure a valid GITHUB_TOKEN is provided.',
-            },
-          ],
-        });
-      }
-
-      await this.client.repos.get({ owner, repo });
-
-      data = true;
-    } catch (foundError) {
-      if (foundError instanceof OrbitItError) {
-        error = foundError;
-      } else if (foundError instanceof Error) {
-        // For this function, we don't treat "not found" as an error
-        // Instead, we return false to indicate the repo doesn't exist
-        if (foundError.message.includes('Not Found')) {
-          data = false;
-        } else {
-          error = new OrbitItError({
-            message: foundError.message,
-            content: [{ message: 'Failed to check if repository exists.' }],
-          });
-        }
-      }
+  ): Promise<CheckRepoExistsResult> {
+    if (!this.client) {
+      throw new OrbitItError({
+        message: 'GitHub client is not initialized',
+        content: [
+          {
+            message: 'Please ensure a valid GITHUB_TOKEN is provided.',
+          },
+        ],
+      });
     }
-
-    return {
-      error,
-      data,
-    };
+    try {
+      await this.client.repos.get({ owner, repo });
+      return true;
+    } catch (err) {
+      if (err instanceof Error && err.message.includes('Not Found')) {
+        return false;
+      }
+      throw err;
+    }
   }
   // #endregion - @checkRepoExists
 }

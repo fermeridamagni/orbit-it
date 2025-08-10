@@ -66,18 +66,7 @@ class ReleaseService {
       }
 
       const repoInfo = await this.gitClient.getRepoInfo();
-
-      if (repoInfo.error || !repoInfo.data) {
-        throw new OrbitItError({
-          message: 'Failed to get repository information.',
-          content: [{ message: 'Please check your git configuration.' }],
-        });
-      }
-
-      this.repoInfo = {
-        owner: repoInfo.data.owner,
-        repo: repoInfo.data.repo,
-      };
+      this.repoInfo = { owner: repoInfo.owner, repo: repoInfo.repo };
 
       // if the versioning strategy is fixed means all the packages/apps have the same version
       if (this.config.release.versioningStrategy === 'fixed') {
@@ -123,15 +112,11 @@ class ReleaseService {
       const currentVersion = this.config.project.version;
 
       const tags = await this.gitClient.getTags();
+      const latestTag = tags.latest || undefined; // first release if undefined
 
-      // if there are no tags, means this is the first release
-      const latestTag = tags.data?.latest || undefined;
+      const commits = await this.gitClient.getCommits({ from: latestTag });
 
-      const commits = await this.gitClient.getCommits({
-        from: latestTag,
-      });
-
-      if (commits.error || !commits.data) {
+      if (!commits || commits.length === 0) {
         throw new OrbitItError({
           message: 'No commits found',
           content: [{ message: 'Please make some changes before releasing.' }],
@@ -141,10 +126,7 @@ class ReleaseService {
       const newVersion = semver.inc(currentVersion, type);
       const tagName = `v${newVersion}`;
 
-      const releaseNotes = this.generateReleaseNotes({
-        tagName,
-        commits: commits.data,
-      });
+      const releaseNotes = this.generateReleaseNotes({ tagName, commits });
 
       if (dryRun) {
         // If dryRun is enabled, return the release information without making any changes
@@ -164,21 +146,19 @@ class ReleaseService {
           path.join(workspace, 'package.json')
         );
 
-        const bumpResult = await this.nodeJsBumpPackages(
-          newVersion,
-          workspaces
-        );
-
-        if (bumpResult.error) {
-          throw bumpResult.error;
-        }
+        await this.nodeJsBumpPackages(newVersion, workspaces);
       }
 
       if (this.config.project.environment === 'python') {
         // TODO: Implement Python package version update logic
       }
 
-      const releaseResult = await this.githubClient.createRelease({
+      await this.gitClient.createTag({
+        tagName,
+        tagMessage: `Release ${tagName}`,
+      });
+
+      await this.githubClient.createRelease({
         body: releaseNotes,
         releaseName: tagName,
         owner: this.repoInfo.owner,
@@ -187,13 +167,6 @@ class ReleaseService {
         prerelease: isPrerelease,
         draft,
       });
-
-      if (releaseResult.error || !releaseResult.data) {
-        throw new OrbitItError({
-          message: 'Failed to create release.',
-          content: [{ message: 'Please check your GitHub configuration.' }],
-        });
-      }
 
       data = {
         version: newVersion,
