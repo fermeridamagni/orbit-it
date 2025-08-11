@@ -1,5 +1,8 @@
 import { resolve } from 'node:path';
+import { configSchema } from '@orbit-it/core';
+import { writeJsonFile } from '@orbit-it/core/utils';
 import { defineBuildConfig } from 'unbuild';
+import { z } from 'zod';
 
 export const alias: Record<string, string> = {
   '@': resolve(__dirname, './src'),
@@ -10,14 +13,14 @@ export const alias: Record<string, string> = {
   '@commands': resolve(__dirname, './src/lib/commands'),
 };
 
-// async function generateJsonConfigSchema(): Promise<void> {
-//   const jsonConfigSchema = z.toJSONSchema(configSchema, {
-//     target: 'draft-7',
-//   });
+async function generateJsonConfigSchema(): Promise<void> {
+  const jsonConfigSchema = z.toJSONSchema(configSchema, {
+    target: 'draft-7',
+  });
 
-//   const filePath = resolve(__dirname, './assets/schema.json');
-//   await writeJsonFile(filePath, jsonConfigSchema);
-// }
+  const filePath = resolve(__dirname, './assets/schema.json');
+  await writeJsonFile(filePath, jsonConfigSchema);
+}
 
 export default defineBuildConfig({
   entries: [
@@ -43,10 +46,10 @@ export default defineBuildConfig({
       banner: '#!/usr/bin/env node',
     },
   },
-  // hooks: {
-  //   'build:done': async () => {
-  //     await generateJsonConfigSchema();
-  //   },
-  // },
+  hooks: {
+    'build:done': async () => {
+      await generateJsonConfigSchema();
+    },
+  },
   alias,
 });

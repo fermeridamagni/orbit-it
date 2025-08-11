@@ -11,6 +11,11 @@
       "description": "Project configuration",
       "type": "object",
       "properties": {
+        "version": {
+          "description": "The version of the project if it is a monorepo and the versioning strategy is fixed",
+          "default": "0.0.0",
+          "type": "string"
+        },
         "type": {
           "description": "The type of project to manage",
           "type": "string",
@@ -21,7 +26,7 @@
         },
         "packageManager": {
           "description": "The package manager used in the project",
-          "default": "pnpm",
+          "default": "npm",
           "type": "string",
           "enum": [
             "npm",
@@ -31,20 +36,28 @@
         },
         "environment": {
           "description": "The runtime environment for the project",
+          "default": "unknown",
           "type": "string",
           "enum": [
             "nodejs",
-            "python"
+            "python",
+            "unknown"
           ]
         },
-        "envFile": {
-          "description": "Path to the environment file",
-          "type": "string"
+        "workspaces": {
+          "description": "The workspaces in the project",
+          "default": [
+            "packages/*",
+            "apps/*"
+          ],
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
         }
       },
       "required": [
         "type",
-        "packageManager",
         "environment"
       ],
       "additionalProperties": false
@@ -85,7 +98,6 @@
     }
   },
   "required": [
-    "$schema",
     "project",
     "release"
   ],
