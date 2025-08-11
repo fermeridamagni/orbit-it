@@ -65,6 +65,16 @@ class ReleaseService {
         });
       }
 
+      const isAuthenticated =
+        await this.githubClient.checkUserIsAuthenticated();
+
+      if (!isAuthenticated) {
+        throw new OrbitItError({
+          message: 'GitHub token is not valid',
+          content: [{ message: 'Please check your GitHub token.' }],
+        });
+      }
+
       const repoInfo = await this.gitClient.getRepoInfo();
       this.repoInfo = { owner: repoInfo.owner, repo: repoInfo.repo };
 
@@ -116,7 +126,7 @@ class ReleaseService {
 
       const commits = await this.gitClient.getCommits({ from: latestTag });
 
-      if (!commits || commits.length === 0) {
+      if (commits.length === 0) {
         throw new OrbitItError({
           message: 'No commits found',
           content: [{ message: 'Please make some changes before releasing.' }],
@@ -167,6 +177,8 @@ class ReleaseService {
         prerelease: isPrerelease,
         draft,
       });
+
+      await this.gitClient.pushTags();
 
       data = {
         version: newVersion,

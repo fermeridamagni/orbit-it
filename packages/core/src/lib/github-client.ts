@@ -32,6 +32,32 @@ export class GitHubClient {
   }
   // #endregion - @init
 
+  // #region - @checkUserIsAuthenticated
+  /**
+   * @description Validates the GitHub personal access token.
+   * @returns A promise that resolves to a boolean indicating whether the token is valid.
+   */
+  async checkUserIsAuthenticated(): Promise<boolean> {
+    if (!this.client) {
+      throw new OrbitItError({
+        message: 'GitHub client is not initialized',
+        content: [
+          {
+            message: 'Please ensure a valid GITHUB_TOKEN is provided.',
+          },
+        ],
+      });
+    }
+
+    try {
+      await this.client.users.getAuthenticated();
+      return true;
+    } catch {
+      return false;
+    }
+  }
+  // #endregion - @checkUserIsAuthenticated
+
   // #region - @getUserInfo
   /**
    * @description Retrieves the authenticated user's information.
