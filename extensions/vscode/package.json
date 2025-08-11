@@ -2,7 +2,7 @@
   "name": "orbit-it-vscode",
   "displayName": "Orbit It",
   "description": "A comprehensive toolkit for managing and interacting with Git and GitHub, including version control, issue tracking, and repository management.",
-  "version": "1.0.0-beta.2",
+  "version": "1.0.0-beta.3",
   "categories": [
     "Other"
   ],
