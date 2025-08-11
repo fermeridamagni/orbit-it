@@ -25,12 +25,22 @@
   "exports": {
     ".": {
       "import": {
-        "default": "./build/index.mjs",
-        "types": "./build/index.d.mts"
+        "types": "./build/index.d.mts",
+        "default": "./build/index.mjs"
       },
       "require": {
-        "default": "./build/index.cjs",
-        "types": "./build/index.d.cts"
+        "types": "./build/index.d.cts",
+        "default": "./build/index.cjs"
+      }
+    },
+    "./utils": {
+      "import": {
+        "types": "./build/utils.d.mts",
+        "default": "./build/utils.mjs"
+      },
+      "require": {
+        "types": "./build/utils.d.cts",
+        "default": "./build/utils.cjs"
       }
     }
   },

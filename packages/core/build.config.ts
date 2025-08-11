@@ -21,6 +21,16 @@ export default defineBuildConfig({
       format: 'cjs',
       ext: 'cjs',
     },
+    {
+      input: 'src/utils.ts',
+      format: 'esm',
+      ext: 'mjs',
+    },
+    {
+      input: 'src/utils.ts',
+      format: 'cjs',
+      ext: 'cjs',
+    },
   ],
   outDir: 'build',
   clean: true,
