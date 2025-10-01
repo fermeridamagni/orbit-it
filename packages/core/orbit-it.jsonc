@@ -1,0 +1,17 @@
+{
+  "$schema": "node_modules/orbit-it/assets/schema.json",
+  "project": {
+    "version": "1.0.0",
+    "type": "monorepo",
+    "packageManager": "pnpm",
+    "environment": "nodejs",
+    "workspaces": [
+      "packages/*"
+    ]
+  },
+  "release": {
+    "strategy": "auto",
+    "versioningStrategy": "fixed",
+    "preReleaseIdentifier": "beta"
+  }
+}
